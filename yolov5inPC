@@ -10,4 +10,13 @@ c:\yolov5
 3. anaconda prompt를 관리자 권한으로 실행하고 아래대로 실행합니다.
 conda create --name py39 python=3.9
 conda activate py39
+conda update conda
 cd C:\yolov5
+pip install -r requirements.txt
+
+4. Run yolov5 in Local PC with CLI
+python detect.py --weights yolov5n.pt --img 640 --conf 0.25 --source data/images
+runs/detect/exp
+
+5. Train(opendataset COCO128, 학습 오픈데이터셋으로 yolov5학습 튜토리얼)
+python train.py --img 640 --batch 1 --epochs 1 --data coco128.yaml --weights yolov5n.pt
