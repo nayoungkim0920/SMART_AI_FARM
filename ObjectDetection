@@ -1,0 +1,15 @@
+yolov5 & roboflow & colab
+
+1. roboflow에서 이미지/영상파일을 업로드하고 어노테이션을한 후 데이터셋을 만들고 export합니다. 
+이때, 아래와 같이 터미널값을 복사해놓습니다.
+!curl -L "https://app.roboflow.com/ds/yDUduzbwoQ?key=wjj7WSYR5N" > roboflow.zip; unzip roboflow.zip; rm roboflow.zip
+
+2. colab에서 구글드라이브를 마운트합니다.
+위치는 /content를 유지합니다.
+
+3. yolov5를 설치합니다.
+!git clone https://github.com/ultralytics/yolov5.git
+%cd yolov5
+! pip install -r requirements.txt
+
+4.
