@@ -12,4 +12,9 @@ yolov5 & roboflow & colab
 %cd yolov5
 ! pip install -r requirements.txt
 
-4.
+4. 데이터셋을 가져오기위해 1번에서 복사해둔 명령어를 실행합니다.
+%cd content
+!curl -L "https://app.roboflow.com/ds/yDUduzbwoQ?key=wjj7WSYR5N" > roboflow.zip; unzip roboflow.zip; rm roboflow.zip
+실행하면 /content 밑에 train, valid, test폴더와 data.yaml파일이 생성됩니다.
+
+5.
