@@ -39,4 +39,144 @@ Results saved to yolov5/runs/detect/exp2
 
 8. 결과로 저장된 이미지를 열어 인식률을 확인하고 정확도가 낮을경우 재학습을 합니다.
 
+9. 웹캠으로 감지하기
+colab에서 yolov5, test, train, valid 폴더를 다운받아 PC에구성한 후 웹캠감지프로그램을 스파이더를 이용해 구현합니다.
+- C:/ObjectDetect/yolov5/yolov5s.pt
+- ultralytics/yolov5
+- C:/ObjectDetect/cup_test/data.yaml
+
+import tkinter as tk
+from tkinter import filedialog
+from PIL import Image, ImageTk, ImageDraw
+import cv2
+import torch
+import yaml
+import os
+import threading
+
+class ObjectDetector:
+    def __init__(self, display_callback=None):
+        # YOLOv5 model and class names loading
+        self.model = None
+        self.class_names = []
+
+        # Load model
+        self.load_model()
+
+        # Callback function for displaying frames
+        self.display_callback = display_callback
+
+    def load_model(self):
+        model_path = "C:/ObjectDetect/yolov5/yolov5s.pt"
+        self.model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path)
+
+        data_path = "C:/ObjectDetect/cup_test/data.yaml"
+        with open(data_path) as f:
+            data = yaml.load(f, Loader=yaml.FullLoader)
+        self.class_names = data['names']
+        print("Loaded class names:", self.class_names)
+
+    def detect_objects_webcam(self):
+        vs = cv2.VideoCapture(1)
+        vs.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        vs.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        vs.set(cv2.CAP_PROP_FPS, 30)
+        while True:
+            ret, frame = vs.read()
+            if not ret:
+                break
+    
+            # Detect objects
+            results = self.model(frame)
+    
+            # Draw bounding boxes and labels
+            for detection in results.pred[0]:
+                x1, y1, x2, y2, conf, cls = detection[:6]
+                # Ensure class index is within the range of class names
+                if 0 <= int(cls) < len(self.class_names):
+                    class_name = self.class_names[int(cls)]
+                    percent = int(conf * 100)
+    
+                    # Convert coordinates to integers
+                    x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+    
+                    # Draw rectangle around detected object
+                    cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+    
+                    # Draw label with class name and confidence
+                    label = f"{class_name} {percent}%"
+                    cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
+    
+            # Display frame
+            if self.display_callback:
+                self.display_callback(frame)
+    
+            # Press 'q' to exit
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+    
+        vs.release()
+        cv2.destroyAllWindows()
+
+
+
+class App:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Object Detection App")
+
+        # Create video label
+        self.video_label = tk.Label(root)
+        self.video_label.pack()
+
+        # Create menu
+        menubar = tk.Menu(root)
+        root.config(menu=menubar)
+        file_menu = tk.Menu(menubar, tearoff=False)
+        menubar.add_cascade(label="File", menu=file_menu)
+        file_menu.add_command(label="Open Image Folder", command=self.open_image_folder)
+        file_menu.add_command(label="Open Webcam", command=self.open_webcam)
+
+        # Object detector
+        self.detector = ObjectDetector(display_callback=self.display_frame)
+
+    def open_image_folder(self):
+        folder_path = filedialog.askdirectory()
+        if folder_path:
+            # Detect objects in images in the selected folder
+            image_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
+            for image_file in image_files:
+                self.detector.detect_objects_image(image_file)
+
+    def open_webcam(self):
+        # Start webcam detection in a separate thread
+        threading.Thread(target=self.detector.detect_objects_webcam, daemon=True).start()
+
+    def display_frame(self, frame):
+        # Convert frame back to RGB for displaying in GUI
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame_pil = Image.fromarray(frame_rgb)
+        frame_tk = ImageTk.PhotoImage(image=frame_pil)
+
+        # Update GUI with the new frame
+        self.video_label.configure(image=frame_tk)
+        self.video_label.image = frame_tk
+
+        # Schedule the next frame update
+        self.root.after(10, self.display_next_frame)
+
+    def display_next_frame(self):
+        # This function is called by after() to display the next frame
+        if self.detector.display_callback:
+            self.detector.display_callback(None)
+
+def main():
+    root = tk.Tk()
+    app = App(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
+
+
 
