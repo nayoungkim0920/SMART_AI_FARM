@@ -1,0 +1,13 @@
+yolov5 in PC
+
+1. anaconda를 설치합니다.
+
+2. github에서 yolov5를 다운로드합니다.
+https://github.com/ultralytics/yolov5
+code > download zip
+c:\yolov5
+
+3. anaconda prompt를 관리자 권한으로 실행하고 아래대로 실행합니다.
+conda create --name py39 python=3.9
+conda activate py39
+cd C:\yolov5
