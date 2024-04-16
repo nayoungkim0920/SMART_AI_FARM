@@ -23,4 +23,11 @@ train: /content/train/images
 val: /content/valid/images
 test: /content/test/images
 
-6. 
+6. 학습시켜 best.pt를 만듭니다.
+!python /content/yolov5/train.py --img 415 --batch 32 --epochs 100 --data /content/data.yaml --cfg /content/yolov5/models/yolov5s.yaml --weights /content/yolov5/yolov5s.pt --name cup_test
+--img : 이미지사이즈 (640, 521..)
+--batch : 배치사이즈(32, 64..)
+--epochs : 학습횟수
+--cfg : 모델아키텍쳐(ylolv5s.yaml, yolov5m.yaml, yolov5l.yaml, yolov5x.yaml ..)
+--weights : 사전학습된 가중치
+--name : 결과를 저장하는 디렉토리
