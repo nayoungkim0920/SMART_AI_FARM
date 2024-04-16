@@ -1,4 +1,4 @@
-yolov5 & roboflow & colab
+yolov5 & roboflow & colab & python
 
 1. roboflow에서 이미지/영상파일을 업로드하고 어노테이션을한 후 데이터셋을 만들고 export합니다. 
 이때, 아래와 같이 터미널값을 복사해놓습니다.
