@@ -33,7 +33,10 @@ test: /content/test/images
 --name : 결과를 저장하는 디렉토리
 
 7. 학습시켜 나온 best.pt로 detect해봅니다.
+결과저장위치 : yolov5/runs/train/cup_test
 !python /content/yolov5/detect.py --weights /content/yolov5/runs/train/cup_test/weights/best.pt --conf 0.5 --source /content/cup.jpg
+
+8. 
 
 
 
