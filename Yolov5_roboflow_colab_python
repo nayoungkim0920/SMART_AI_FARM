@@ -6,6 +6,8 @@ yolov5 & roboflow & colab & python
 !curl -L "https://app.roboflow.com/ds/yDUduzbwoQ?key=wjj7WSYR5N" > roboflow.zip; unzip roboflow.zip; rm roboflow.zip
 
 2. colab에서 구글드라이브를 마운트합니다.
+from google.colab import drive
+drive.mount('/content/drive')
 위치는 /content를 유지합니다.
 
 3. yolov5를 설치합니다.
