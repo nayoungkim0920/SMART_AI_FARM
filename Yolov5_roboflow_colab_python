@@ -40,7 +40,7 @@ Results saved to yolov5/runs/detect/exp2
 8. 결과로 저장된 이미지를 열어 인식률을 확인하고 정확도가 낮을경우 재학습을 합니다.
 
 9. 웹캠으로 감지하기
-colab에서 yolov5, test, train, valid 폴더를 다운받아 PC에구성한 후 웹캠감지프로그램을 스파이더를 이용해 구현합니다.
+colab에서 yolov5, test, train, valid 폴더와 data.yaml파일을 다운받아 PC에구성한 후 웹캠감지프로그램을 스파이더를 이용해 구현합니다.
 - C:/ObjectDetect/yolov5/yolov5s.pt
 - ultralytics/yolov5
 - C:/ObjectDetect/cup_test/data.yaml
