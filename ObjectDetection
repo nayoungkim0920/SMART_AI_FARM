@@ -34,9 +34,9 @@ test: /content/test/images
 
 7. 학습시켜 나온 best.pt로 detect해봅니다.
 결과저장위치 : yolov5/runs/train/cup_test
-!python /content/yolov5/detect.py --weights /content/yolov5/runs/train/cup_test/weights/best.pt --conf 0.5 --source /content/cup.jpg
+!python /content/yolov5/detect.py --weights /content/yolov5/runs/train/cup_test/weights/best.pt --conf 0.5 --source /content/cups.png
+Results saved to yolov5/runs/detect/exp2
 
-8. 
-
+8. 결과로 저장된 이미지를 열어 인식률을 확인하고 정확도가 낮을경우 재학습을 합니다.
 
 
