@@ -1,6 +1,7 @@
 yolov5 & roboflow & colab & python
 
 1. roboflow에서 이미지/영상파일을 업로드하고 어노테이션을한 후 데이터셋을 만들고 export합니다. 
+(데이터셋으로 쓰이는 영상/이미지는 최대한 검정배경에서 빛반사없이 촬영하고 갯수는 많으면 많을 수록 유리합니다.)
 이때, 아래와 같이 터미널값을 복사해놓습니다.
 !curl -L "https://app.roboflow.com/ds/yDUduzbwoQ?key=wjj7WSYR5N" > roboflow.zip; unzip roboflow.zip; rm roboflow.zip
 
