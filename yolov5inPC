@@ -21,6 +21,7 @@ C:\Program Files\Git
 
 3. git환경변수를 추가해주고 재부팅합니다.
 C:\Program Files\Git\bin
+명령프롬프트에서 KMP_DUPLICATE_LIB_OK=TRUE 환경변수를 등록해줍니다.
 
 1. anaconda를 설치합니다.
 
