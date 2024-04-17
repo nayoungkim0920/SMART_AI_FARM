@@ -15,6 +15,13 @@ Local Installer for Windows (Zip)
 -SDK설치경로에 다운로드받은 폴더를 추가합니다.(include, lib, bin)
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.0
 
+2. git을 다운로드받습니다.
+https://git-scm.com/
+C:\Program Files\Git
+
+3. git환경변수를 추가해주고 재부팅합니다.
+C:\Program Files\Git\bin
+
 1. anaconda를 설치합니다.
 
 2. github에서 yolov5를 다운로드합니다.
