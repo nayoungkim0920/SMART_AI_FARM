@@ -23,7 +23,7 @@ C:\Program Files\Git
 C:\Program Files\Git\bin
 명령프롬프트에서 KMP_DUPLICATE_LIB_OK=TRUE 환경변수를 등록해줍니다.
 
-1. anaconda를 설치합니다.
+1. anaconda를 설치합니다. vscode를 설치합니다.
 
 2. github에서 yolov5를 다운로드합니다.
 https://github.com/ultralytics/yolov5
