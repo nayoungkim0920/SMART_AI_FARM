@@ -9,6 +9,9 @@ https://developer.nvidia.com/rdp/cudnn-archive
 CUDA Toolkit 12.0.0 (December 2022), Versioned Online Documentation, windows11
 C:\Users\nayou\AppData\Local\Temp\cuda
 nvidia 가입 후 로그인
+Download cuDNN v8.9.7 (December 5th, 2023), for CUDA 12.x
+Local Installers for Windows and Linux, Ubuntu(x86_64, armsbsa)
+Local Installer for Windows (Zip)
 
 1. anaconda를 설치합니다.
 
