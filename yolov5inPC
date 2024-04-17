@@ -4,6 +4,10 @@ yolov5 in PC
 CUDA 버전확인: nvidia-smi
 CUDA : 12.0
 CUDA capability : 8.6
+https://developer.nvidia.com/cuda-toolkit-archive
+https://developer.nvidia.com/rdp/cudnn-archive
+CUDA Toolkit 12.0.0 (December 2022), Versioned Online Documentation
+nvidia 가입 후 로그인
 
 1. anaconda를 설치합니다.
 
