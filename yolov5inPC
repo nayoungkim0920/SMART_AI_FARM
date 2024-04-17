@@ -45,3 +45,5 @@ runs/detect/exp
 
 5. Train(opendataset COCO128, 학습 오픈데이터셋으로 yolov5학습 튜토리얼)
 python train.py --img 640 --batch 1 --epochs 1 --data coco128.yaml --weights yolov5n.pt
+Results saved to runs\train\exp2
+
