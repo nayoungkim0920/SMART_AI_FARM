@@ -12,6 +12,8 @@ nvidia 가입 후 로그인
 Download cuDNN v8.9.7 (December 5th, 2023), for CUDA 12.x
 Local Installers for Windows and Linux, Ubuntu(x86_64, armsbsa)
 Local Installer for Windows (Zip)
+-SDK설치경로에 다운로드받은 폴더를 추가합니다.(include, lib, bin)
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.0
 
 1. anaconda를 설치합니다.
 
