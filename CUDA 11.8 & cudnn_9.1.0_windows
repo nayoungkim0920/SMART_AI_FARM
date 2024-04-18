@@ -56,3 +56,6 @@ Type "help", "copyright", "credits" or "license" for more information.
 4.9.0
 
 - 데이터셋만들기
+roboflow에서 만든 데이터셋을 다운로드
+c:/cup_test라고 이름을 바꿔이동해줍니다.
+
