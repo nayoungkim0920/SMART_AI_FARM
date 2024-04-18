@@ -1,22 +1,17 @@
-CUDA 11.6
+- 내pc사양
 이름	NVIDIA GeForce RTX 4060 Laptop GPU
-지포스 RTX 4060
-cuda_11.6.0_511.23_windows
 
-다운로드자동연결
-https://developer.nvidia.com/cuda-downloads
+- torch지원버전 
+https://pytorch.org/get-started/locally/
+cuda_11.8.0_522.06_windows, windows11
 
-forch지원버전
-cuda_11.8.0_522.06_windows
-
-설치경로
+- 설치경로
 "C:\Program Files\NVIDIA GPU Computing Toolkit"
 
-cuDNN
+- cuDNN
 https://developer.nvidia.com/cudnn-downloads?target_os=Windows&target_arch=x86_64
 cudnn_9.1.0_windows
 C:\Program Files\NVIDIA\CUDNN\v9.1 bin, lib, include를 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6 덮어쓰기
-
 (base) C:\Windows\System32>nvcc --version
 nvcc: NVIDIA (R) Cuda compiler driver
 Copyright (c) 2005-2021 NVIDIA Corporation
@@ -24,5 +19,16 @@ Built on Fri_Dec_17_18:28:54_Pacific_Standard_Time_2021
 Cuda compilation tools, release 11.6, V11.6.55
 Build cuda_11.6.r11.6/compiler.30794723_0
 
-torch
+- torch
 https://pytorch.org/get-started/locally/
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+python
+>>> import torch
+>>> torch.cuda.get_device_name(0)
+'NVIDIA GeForce RTX 4060 Laptop GPU'
+>>> torch.cuda.is_available()
+True
+>>> torch.__version__
+'2.2.2+cu118'
+
