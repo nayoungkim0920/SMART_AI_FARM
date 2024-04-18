@@ -54,3 +54,5 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> import cv2
 >>> print(cv2.__version__)
 4.9.0
+
+- 데이터셋만들기
