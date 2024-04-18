@@ -58,4 +58,23 @@ Type "help", "copyright", "credits" or "license" for more information.
 - 데이터셋만들기
 roboflow에서 만든 데이터셋을 다운로드
 c:/cup_test라고 이름을 바꿔이동해줍니다.
+그리고 data.yaml을 수정합니다.
+
+train: c:/cup_test/train/images
+val: c:/cup_test/valid/images
+test: c:/cup_test/test/images
+
+nc: 3
+names: ['bottle', 'cup', 'tumbler']
+
+roboflow:
+  workspace: nayoungkim-xrg93
+  project: cup-krqrq
+  version: 14
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/nayoungkim-xrg93/cup-krqrq/dataset/14
+
+- darknet 다운로드
+https://github.com/AlexeyAB/darknet
+c:/darknet
 
