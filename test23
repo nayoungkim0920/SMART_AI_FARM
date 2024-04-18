@@ -204,7 +204,37 @@ void control(int temp_value,
   }
   else //값넣고 실행 눌렀을때
   {
-    
+    if (temp > temp_value || humi > humi_value) {
+      digitalWrite(motorPin1_1, HIGH);
+      digitalWrite(motorPin1_2, LOW);
+
+      digitalWrite(motorPin2_1, HIGH);
+      digitalWrite(motorPin2_2, LOW);
+    } 
+    else {
+      digitalWrite(motorPin1_1, LOW);
+      digitalWrite(motorPin1_2, LOW);
+
+      digitalWrite(motorPin2_1, LOW);
+      digitalWrite(motorPin2_2, LOW);
+    }
+
+    if (cds > light_value) {
+      digitalWrite(lightingPin, HIGH);
+    }
+    else {
+      digitalWrite(lightingPin, LOW);
+    }
+
+    if (soil < soil_value) {
+      digitalWrite(pumpPin1, HIGH);
+      digitalWrite(pumpPin2, LOW);
+    }
+    else {
+      digitalWrite(pumpPin1, LOW);
+      digitalWrite(pumpPin2, LOW);
+    }
+
   }
 
 }
