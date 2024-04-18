@@ -78,5 +78,9 @@ roboflow:
 https://github.com/AlexeyAB/darknet
 c:/darknet
 
+- visual studio enterprise 2022 설치
+https://visualstudio.microsoft.com/ko/downloads/
+
 - darknet 설정
 C:\darknet\build\darknet\yolo_cpp_dll.sln을 visual studio로 실행합니다.
+
