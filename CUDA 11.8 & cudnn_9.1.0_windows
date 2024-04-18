@@ -23,6 +23,7 @@ Build cuda_11.6.r11.6/compiler.30794723_0
 https://pytorch.org/get-started/locally/
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
+- anaconda prompt
 python
 >>> import torch
 >>> torch.cuda.get_device_name(0)
