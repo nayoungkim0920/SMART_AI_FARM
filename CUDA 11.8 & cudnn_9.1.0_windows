@@ -78,3 +78,5 @@ roboflow:
 https://github.com/AlexeyAB/darknet
 c:/darknet
 
+- darknet 설정
+C:\darknet\build\darknet\yolo_cpp_dll.sln을 visual studio로 실행합니다.
