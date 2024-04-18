@@ -1,3 +1,5 @@
+//smart_farm.ino
+
 #include <Wire.h>
 #include <DHT.h>  
 
@@ -12,8 +14,7 @@
 #define DHTPIN        3                  
 
 //r1
-#define lightingPin   4       
-
+#define lightingPin   4
 //r2
 #define lightingPin2  5        
 
@@ -97,7 +98,7 @@ void loop()
     if (Serial.available() > 0) 
     {
       String data = Serial.readStringUntil(','); // 시리얼로부터 데이터를 읽음
-      Serial.print(data);
+      //Serial.print(data);
     
       if (data == "unknown") 
       {
@@ -160,9 +161,21 @@ void control(int temp_value,
              int soil, 
              int cds)
 {
+
+  //아웃풋 off  
+  digitalWrite(motorPin1_1, LOW);
+  digitalWrite(motorPin1_2, LOW);
+  digitalWrite(motorPin2_1, LOW);
+  digitalWrite(motorPin2_2, LOW);
+  digitalWrite(lightingPin, LOW);
+  digitalWrite(lightingPin2, LOW);
+  digitalWrite(pumpPin, LOW);
+      
   //값안넣고 실행누른경우
   if(temp_value == 99 && humi_value == 99 && soil_value ==1 && light_value==99)
   {
+    //Serial.write("1");
+    
     if (18 < temp < 27)
     {
       digitalWrite(motorPin1_1, HIGH);
@@ -171,68 +184,64 @@ void control(int temp_value,
       digitalWrite(motorPin2_1, LOW);
       digitalWrite(motorPin1_2, HIGH);
     }
-    else{
-      digitalWrite(motorPin1_1, LOW);
-      digitalWrite(motorPin1_2, LOW);
-
-      digitalWrite(motorPin2_1, LOW);
-      digitalWrite(motorPin1_2, LOW);
-    }
 
     if (65 < humi < 75){
       digitalWrite(pumpPin, HIGH);
-    }
-    else{
-      digitalWrite(pumpPin, LOW);
     }
 
     if (75 < soil < 85){
       digitalWrite(pumpPin, HIGH);
     }
-    else{
-      digitalWrite(pumpPin, LOW);
-    }
 
     if (30 < cds < 70){
       digitalWrite(lightingPin, HIGH);
       digitalWrite(lightingPin, LOW);
-    }
-    else{
-      digitalWrite(lightingPin, LOW);
-      digitalWrite(lightingPin, LOW);
+      digitalWrite(lightingPin2, HIGH);
+      digitalWrite(lightingPin2, LOW);
     }
   }
   else //값넣고 실행 눌렀을때
   {
-    if (temp > temp_value || humi > humi_value) {
+    //Serial.write("2");
+      
+    //입력한 온도보다 온도가높은경우
+    if (temp > temp_value) 
+    {
+      //팬1,2 가동
       digitalWrite(motorPin1_1, HIGH);
       digitalWrite(motorPin1_2, LOW);
 
       digitalWrite(motorPin2_1, HIGH);
       digitalWrite(motorPin2_2, LOW);
     } 
-    else {
-      digitalWrite(motorPin1_1, LOW);
+
+    //Serial.print(humi);
+    //Serial.print(":");
+    //Serial.print(humi_value);
+    
+    //입력한 습도가 낮은경우
+    if(humi > humi_value)
+    {
+      //Serial.write("3");
+      
+      //팬1,2 가동
+      digitalWrite(motorPin1_1, HIGH);
       digitalWrite(motorPin1_2, LOW);
 
-      digitalWrite(motorPin2_1, LOW);
+      digitalWrite(motorPin2_1, HIGH);
       digitalWrite(motorPin2_2, LOW);
     }
 
-    if (cds > light_value) {
+    //입력한 조도가 높은경우
+    if (cds < light_value) {
+      //LED 가동
       digitalWrite(lightingPin, HIGH);
-    }
-    else {
-      digitalWrite(lightingPin, LOW);
+      digitalWrite(lightingPin2, HIGH);
     }
 
+    //토양습도가 낮은경우
     if (soil < soil_value) {
-      digitalWrite(pumpPin1, HIGH);
-      digitalWrite(pumpPin2, LOW);
-    }
-    else {
-      digitalWrite(pumpPin1, LOW);
-      digitalWrite(pumpPin2, LOW);
+      digitalWrite(pumpPin, HIGH);
     }
 
   }
