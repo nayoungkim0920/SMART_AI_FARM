@@ -32,3 +32,10 @@ True
 >>> torch.__version__
 '2.2.2+cu118'
 
+- train.py test
+python train.py --img 640 --batch 1 --epochs 1 --data coco128.yaml --weights yolov5n.pt --device 0
+
+      Epoch    GPU_mem   box_loss   obj_loss   cls_loss  Instances       Size
+        0/0     0.514G    0.05519    0.09753    0.05882         21        640: 100%|██████████| 128/128 [00:07<00:00, 17.29it/s]
+                 Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 64/64 [00:02<00:00, 22.37it/s]
+                   all        128        929      0.502      0.492       0.51      0.317
