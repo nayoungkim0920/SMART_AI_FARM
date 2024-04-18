@@ -42,3 +42,15 @@ python train.py --img 640 --batch 1 --epochs 1 --data coco128.yaml --weights yol
         0/0     0.514G    0.05519    0.09753    0.05882         21        640: 100%|██████████| 128/128 [00:07<00:00, 17.29it/s]
                  Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 64/64 [00:02<00:00, 22.37it/s]
                    all        128        929      0.502      0.492       0.51      0.317
+
+- 학습시키기
+anaconda prompt
+pip install opencv-python
+pip install opencv-contrib-python
+
+(base) c:\yolov5>python
+Python 3.11.8 | packaged by Anaconda, Inc. | (main, Feb 26 2024, 21:34:05) [MSC v.1916 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import cv2
+>>> print(cv2.__version__)
+4.9.0
