@@ -47,3 +47,20 @@ runs/detect/exp
 python train.py --img 640 --batch 1 --epochs 1 --data coco128.yaml --weights yolov5n.pt
 Results saved to runs\train\exp2
 
+6. 직접만든 데이터셋으로 학습시키기
+(base) c:\yolov5>python c:/yolov5/train.py --img 640 --batch 1 --epochs 100 --data c:/cup_test/data.yaml --weights yolov5n.pt --device 0
+ Epoch    GPU_mem   box_loss   obj_loss   cls_loss  Instances       Size
+       0/99      0.51G    0.05364     0.0261    0.01911          2        640: 100%|██████████| 643/643 [00:35<00:
+                 Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 35/35 [
+                   all         69         78       0.79       0.16      0.148     0.0492
+
+Model summary: 157 layers, 1763224 parameters, 0 gradients, 4.1 GFLOPs
+                 Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 35/35 [
+                   all         69         78      0.921      0.986      0.992      0.836
+                bottle         69          3      0.827          1      0.995      0.841
+                   cup         69         60          1      0.972      0.995      0.848
+               tumbler         69         15      0.937      0.986      0.987      0.819
+Results saved to runs\train\exp12
+
+7. 만들어진 best.pt로 검출하기
+python c:/yolov5/detect.py --weights C:\yolov5\runs\train\exp12\weights\best.pt --img 640 --conf 0.25 --source C:\cup_test\img --device 0
