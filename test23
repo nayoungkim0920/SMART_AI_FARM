@@ -160,42 +160,51 @@ void control(int temp_value,
              int soil, 
              int cds)
 {
-  if (18 < temp < 27)
+  //값안넣고 실행누른경우
+  if(temp_value == 99 && humi_value == 99 && soil_value ==1 && light_value==99)
   {
-    digitalWrite(motorPin1_1, HIGH);
-    digitalWrite(motorPin1_2, LOW);
+    if (18 < temp < 27)
+    {
+      digitalWrite(motorPin1_1, HIGH);
+      digitalWrite(motorPin1_2, LOW);
 
-    digitalWrite(motorPin2_1, LOW);
-    digitalWrite(motorPin1_2, HIGH);
-  }
-  else{
-    digitalWrite(motorPin1_1, LOW);
-    digitalWrite(motorPin1_2, LOW);
+      digitalWrite(motorPin2_1, LOW);
+      digitalWrite(motorPin1_2, HIGH);
+    }
+    else{
+      digitalWrite(motorPin1_1, LOW);
+      digitalWrite(motorPin1_2, LOW);
 
-    digitalWrite(motorPin2_1, LOW);
-    digitalWrite(motorPin1_2, LOW);
+      digitalWrite(motorPin2_1, LOW);
+      digitalWrite(motorPin1_2, LOW);
+    }
+
+    if (65 < humi < 75){
+      digitalWrite(pumpPin, HIGH);
+    }
+    else{
+      digitalWrite(pumpPin, LOW);
+    }
+
+    if (75 < soil < 85){
+      digitalWrite(pumpPin, HIGH);
+    }
+    else{
+      digitalWrite(pumpPin, LOW);
+    }
+
+    if (30 < cds < 70){
+      digitalWrite(lightingPin, HIGH);
+      digitalWrite(lightingPin, LOW);
+    }
+    else{
+      digitalWrite(lightingPin, LOW);
+      digitalWrite(lightingPin, LOW);
+    }
+  }
+  else //값넣고 실행 눌렀을때
+  {
+    
   }
 
-  if (65 < humi < 75){
-    digitalWrite(pumpPin, HIGH);
-  }
-  else{
-    digitalWrite(pumpPin, LOW);
-  }
-
-  if (75 < soil < 85){
-    digitalWrite(pumpPin, HIGH);
-  }
-  else{
-    digitalWrite(pumpPin, LOW);
-  }
-  
-  if (30 < light < 70){
-    digitalWrite(lightingPin, HIGH);
-    digitalWrite(lightingPin, LOW);
-  }
-  else{
-    digitalWrite(lightingPin, LOW);
-    digitalWrite(lightingPin, LOW);
-  }
 }
