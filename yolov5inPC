@@ -48,6 +48,7 @@ python train.py --img 640 --batch 1 --epochs 1 --data coco128.yaml --weights yol
 Results saved to runs\train\exp2
 
 6. 직접만든 데이터셋으로 학습시키기
+python c:/yolov5/train.py --img 640 --batch 16 --epochs 250 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0
 (base) c:\yolov5>python c:/yolov5/train.py --img 640 --batch 1 --epochs 100 --data c:/cup_test/data.yaml --weights yolov5n.pt --device 0
  Epoch    GPU_mem   box_loss   obj_loss   cls_loss  Instances       Size
        0/99      0.51G    0.05364     0.0261    0.01911          2        640: 100%|██████████| 643/643 [00:35<00:
