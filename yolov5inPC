@@ -72,3 +72,6 @@ python c:/yolov5/train.py --img 640 --batch 16 --epochs 250 --data c:/data.yaml 
 Adam은 Adaptive Moment Estimation(적응적 모멘트 추정)의 약자로, SGD의 단점을 보완하기 위해 제안된 옵티마이저입니다.
 각 파라미터마다 학습률을 조정하고, 지수 가중 이동 평균을 사용하여 각 매개변수의 스케일을 조정합니다.
 이러한 특징으로 인해 Adam은 일반적으로 SGD보다 더 빠르게 수렴하고 더 나은 성능을 보입니다.
+-bach를 바꿔 학습시킵니다
+python c:/yolov5/train.py --img 640 --batch 8 --epochs 100 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0 --name exp --optimizer Adam --project c:\yolov5result
+
