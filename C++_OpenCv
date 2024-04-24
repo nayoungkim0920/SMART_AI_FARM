@@ -13,3 +13,5 @@ C++로 CCTV만들기
   구성 속성 > c/c++ > 일반 > 추가 포함 디렉터리 > C:\opencv\build\include
   구성 속성 > 링커 > 일반 > 추가 라이브러리 디렉터리 > C:\opencv\build\x64\vc16\lib
   구성 속성 > 링커 > 입력 > 추가 종속성 > "C:\opencv\build\x64\vc16\lib\opencv_world490.lib"
+
+  고급시스템설정> 환경변수 > 편집 Path에 C:/opencv/build/bin 경로를 추가해준다
