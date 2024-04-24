@@ -74,6 +74,8 @@ Adam은 Adaptive Moment Estimation(적응적 모멘트 추정)의 약자로, SGD
 이러한 특징으로 인해 Adam은 일반적으로 SGD보다 더 빠르게 수렴하고 더 나은 성능을 보입니다.
 -bach를 바꿔 학습시킵니다
 python c:/yolov5/train.py --img 640 --batch 8 --epochs 100 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0 --name exp --optimizer Adam --project c:\yolov5result
+python c:/yolov5/train.py --img 640 --batch 16 --epochs 50 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0 --name exp --optimizer SGD --project c:/yolov5result
+
 옵션설명
 python : 스크립트를 실행하는 데 사용할 Python 인터프리터 지정
 c:/yolov5/train.py : YOLOv5를 훈련하는 데 사용되는 Python 스크립트 train.py의 경로
