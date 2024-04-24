@@ -1,0 +1,7 @@
+C++로 CCTV만들기
+설치
+  visual studio 2002를 설치한다
+    VisualStudioSetup.exe
+  Opencv를 설치한다.
+    https://github.com/opencv/opencv/releases
+    opencv-4.9.0-windows.exe
