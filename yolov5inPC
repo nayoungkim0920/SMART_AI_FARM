@@ -142,5 +142,7 @@ R : 재현율, 모든 실제 양성 인스턴스 사이에서 실제 양성 감�
 mAP50 : IoU(Intersection over Union) 임계 값이 0.5인 경우의 평균 정밀도 객체 감지에 일반적으로 사용되는 지표
 mAP50-95 : 0.5에서 0.95까지의 IoU임계 값 범위에서의 평균 정밀
 
-python c:/yolov5/train.py --img 640 --batch 16 --epochs 50 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0 --name exp --optimizer SGD --project c:/yolov5result --lr 0.01
-
+(최적화...)
+python c:/yolov5/train.py --img 640 --batch 16 --epochs 50 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0 --name exp --optimizer SGD --project c:/yolov5result
+python c:/yolov5/train.py --img 640 --batch 16 --epochs 50 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0 --name exp --optimizer Adam --project c:/yolov5result
+python c:/yolov5/detect.py --weights C:\yolov5result\exp20\weights\best.pt --img 640 --conf 0.50 --source C:\images --device 0
