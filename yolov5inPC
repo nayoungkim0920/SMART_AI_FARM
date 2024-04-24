@@ -113,3 +113,28 @@ roboflow:
   version: 20
   license: CC BY 4.0
   url: https://universe.roboflow.com/nayoungkim-xrg93/cup-krqrq/dataset/20
+
+개채 감지 모델의 훈련 모니터링(Yolov5, You Only Look Once)
+      Epoch    GPU_mem   box_loss   obj_loss   cls_loss  Instances       Size
+       0/99      3.19G    0.05293    0.02123    0.01472          9        640: 100%|██████████| 83/83 [00:14<00:00,  5.
+                 Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 6/6 [00:00<0
+                   all         96         96          0          0          0          0
+
+Epoch : 훈련 진행 상황
+GPU_mem : 훈련 중 GPU메모리 사용량
+
+!!세가지 손실을 최소화하고 낮은값으로 유지하는데 중점을 둠!!
+box_loss : 박스손실, 바운딩 박스 위치 지정과 관련된 손실
+obj_loss : 객체손실, 주어진 바운딩 박스에 개체가 있는지 예측하는 손실
+cls_loss : 감지된 객체의 클래스를 예측하는 손실
+
+Instances : 각 에포크마다 감지된 개체 인스턴스의 수, 모델이 객체를 감지하는 능력 파악
+Size : 훈련 중 사용된 입력 이미지의 크기
+
+감지매트릭
+P : 정밀도, 모든 예측된 양성 감지 사이에서 실제 양성 감지의 비율
+R : 재현율, 모든 실제 양성 인스턴스 사이에서 실제 양성 감지의 비율
+mAP50 : IoU(Intersection over Union) 임계 값이 0.5인 경우의 평균 정밀도 객체 감지에 일반적으로 사용되는 지표
+mAP50-95 : 0.5에서 0.95까지의 IoU임계 값 범위에서의 평균 정밀
+
+
