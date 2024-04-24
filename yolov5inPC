@@ -43,6 +43,8 @@ pip install -r requirements.txt
 python detect.py --weights yolov5n.pt --img 640 --conf 0.25 --source data/images
 runs/detect/exp
 
+python c:/yolov5/detect.py --weights C:\yolov5result\exp20\weights\best.pt --img 640 --conf 0.50 --source C:\images --device 0
+
 5. Train(opendataset COCO128, 학습 오픈데이터셋으로 yolov5학습 튜토리얼)
 python train.py --img 640 --batch 1 --epochs 1 --data coco128.yaml --weights yolov5n.pt
 Results saved to runs\train\exp2
