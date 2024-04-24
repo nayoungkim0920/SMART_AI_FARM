@@ -90,6 +90,7 @@ c:/yolov5/train.py : YOLOv5를 훈련하는 데 사용되는 Python 스크립트
 --device 0 : 사용할 디바이스 설정, 0은 첫번째 GPU를 가리킴, GPU가 없는 경우 --device cpu로 설정
 --name exp : 훈련 실험의 이름 설정, 훈련 중에 생성된 결과 디렉토리에 사용
 --optimizer Adam : 옵티마이저 설정
+--optimizer SDG : Stochastic Gradient Descent는 딥러닝에서 가장 기본적인 최적화 알고리즘
 --project c:/yolov5result : 결과를 저장할 프로젝트 디렉토리의 경로, 훈련 중에 생성된 모든 파일 및 로그가 저장됨
 
 data.yaml
