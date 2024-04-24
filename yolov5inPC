@@ -74,4 +74,18 @@ Adam은 Adaptive Moment Estimation(적응적 모멘트 추정)의 약자로, SGD
 이러한 특징으로 인해 Adam은 일반적으로 SGD보다 더 빠르게 수렴하고 더 나은 성능을 보입니다.
 -bach를 바꿔 학습시킵니다
 python c:/yolov5/train.py --img 640 --batch 8 --epochs 100 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0 --name exp --optimizer Adam --project c:\yolov5result
-
+옵션설명
+python : 스크립트를 실행하는 데 사용할 Python 인터프리터 지정
+c:/yolov5/train.py : YOLOv5를 훈련하는 데 사용되는 Python 스크립트 train.py의 경로
+--img 640 : 이미지의 크기를 640X640 픽셀로 설정, 이미지의 크기가 클 수록 성능이 향상되지만 훈련시간이 늘어날 수 있음
+--batch 8 : 배치의 크기설정, 한 번에 모델에 공급되는 이미지의 수, 한번에 8개의 이미지가 모델에 공급, 
+            더 큰 배치를 사용하면 GPU가 더 많은 데이터를 처리할 수 있어 훈련 속도가 향상되지만, 그만큼  더 많은 메모리가 필요함
+--epochs 100 : YOLOv5훈련 중에 전체 데이터셋을 몇 번 반복해서 사용할지를 결정함, 모델이 데이터셋을 한번 통과할 때마다 한 번의 에포크가 진행됨
+               에포크 수는 훈련과정에서 데이터셋을 모델에 노출시키는 횟수 결정, 일반적으로 더 많은 에포크를 사용할수록 모델의 성능이 향상,
+               과적(overfitting)을 방지하기 위해 적절한 수준에서 훈련을 중단해야함
+--data c:/data.yaml : 데이터 구성을 정의 하는 YAML파일의 경로, 데이터 구성은 클래스 이름, 학습 및 검증 이미지의 경로 등 포함
+--weights c:/yolov5/models/yolov5m.pt : 사전 훈련된 모델 가중치 파일의 경로, 훈련을 시작하기 전에 초기 가중치로 사용
+--device 0 : 사용할 디바이스 설정, 0은 첫번째 GPU를 가리킴, GPU가 없는 경우 --device cpu로 설정
+--name exp : 훈련 실험의 이름 설정, 훈련 중에 생성된 결과 디렉토리에 사용
+--optimizer Adam : 옵티마이저 설정
+--project c:/yolov5result : 결과를 저장할 프로젝트 디렉토리의 경로, 훈련 중에 생성된 모든 파일 및 로그가 저장됨
