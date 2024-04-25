@@ -1,0 +1,31 @@
+
+
+한글데이터 다운로드 하고
+
+https://github.com/tesseract-ocr/tessdata/
+kor.traineddata 다운로드
+kor_vert.traineddata 다운로드
+C:\Program Files\Tesseract-OCR\tessdata 이폴더 밑으로 복사해서 붙여 넣는다
+
+https://github.com/tesseract-ocr/tessdata_best/tree/main
+
+테스트 프로그램
+
+import pytesseract
+import cv2
+import os
+
+pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe"
+result = open("C:/scan_image/output.txt","w",encoding='UTF-8')
+
+path_dir = 'C:/scan_image'
+file_list = os.listdir(path_dir)
+
+for file_name in file_list :
+    if file_name == "output.txt":
+        continue
+    result.write(pytesseract.image_to_string('C:/scan_image/'+file_name,lang='ENG+KOR',
+        config=r'-c preserve_interword_spaces=1 --psm 3  --oem 3 -l kor+eng --tessdata-dir "C:/Program Files/Tesseract-OCR/tessdata"')+'\n')
+    
+result.close()
+print("추출이 완료되었습니다. 확인부탁드립니다.")
