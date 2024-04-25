@@ -52,5 +52,67 @@ int main() {
 }
 
 간단한 객체인식
+#include <opencv2/opencv.hpp>
 
+int main() {
+    cv::VideoCapture cap(0); // 웹캠에 연결 (0: 기본 웹캠)
+
+    if (!cap.isOpened()) {  // 웹캠 연결 실패 확인
+        std::cerr << "Error: Unable to open the webcam" << std::endl;
+        return -1;
+    }
+
+    cv::namedWindow("Object Detection", cv::WINDOW_AUTOSIZE); // 윈도우 생성
+
+    cv::Mat frame, gray, bg, diff, thresh;
+
+    // 첫 번째 프레임을 배경으로 설정
+    if (!cap.read(bg)) {
+        std::cerr << "Error: Unable to read a frame" << std::endl;
+        return -1;
+    }
+
+    while (true) {
+        // 웹캠에서 프레임 읽기
+        if (!cap.read(frame)) {
+            std::cerr << "Error: Unable to read a frame" << std::endl;
+            break;
+        }
+
+        cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY); // 프레임을 그레이스케일로 변환
+
+        // 배경과의 차이 계산
+        diff = cv::Mat::zeros(gray.size(), gray.type());
+        for (int y = 0; y < gray.rows; ++y) {
+            for (int x = 0; x < gray.cols; ++x) {
+                diff.at<uchar>(y, x) = cv::saturate_cast<uchar>(std::abs(gray.at<uchar>(y, x) - bg.at<uchar>(y, x)));
+            }
+        }
+
+        // 차이가 일정 값 이상인 픽셀을 강조
+        cv::threshold(diff, thresh, 30, 255, cv::THRESH_BINARY);
+
+        // 노이즈 제거를 위해 모폴로지 연산 수행
+        cv::morphologyEx(thresh, thresh, cv::MORPH_OPEN, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)));
+
+        // 경계 상자 그리기
+        std::vector<std::vector<cv::Point>> contours;
+        cv::findContours(thresh, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+        for (size_t i = 0; i < contours.size(); ++i) {
+            cv::Rect boundingRect = cv::boundingRect(contours[i]);
+            cv::rectangle(frame, boundingRect, cv::Scalar(0, 255, 0), 2);
+        }
+
+        cv::imshow("Object Detection", frame); // 프레임 표시
+
+        if (cv::waitKey(30) >= 0) // 키 입력을 대기하며 30ms 후 종료
+            break;
+    }
+
+    cap.release(); // 웹캠 해제
+    cv::destroyAllWindows(); // 모든 윈도우 제거
+
+    return 0;
+}
 
