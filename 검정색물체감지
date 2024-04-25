@@ -1,0 +1,107 @@
+C++로 CCTV만들고 카메라앞의 객체인식하기(딥러닝X)
+
+설치
+  visual studio 2002를 설치한다
+    VisualStudioSetup.exe
+  Opencv를 설치한다.
+    https://github.com/opencv/opencv/releases
+    opencv-4.9.0-windows.exe
+
+설정
+  visual studio 2002
+    프로젝트 > 속성 > 모든구성, 활성(x64)
+    C/C++ > 일반 > 추가 포함 디렉터리 > 편집 > C:\opencv\build\include
+    링커 > 일반 > 추가 라이브러리 디렉터리 > 편집 > C:\opencv\build\x64\vc16\lib
+    구성을 Debug로 변경 > 링커 > 입력 > 추가 종속성 > 편집 > opencv_world490d.lib
+    구성을 release 변경 > 링커 > 입력 > 추가 종속성 > 편집 > opencv_world490.lib
+    C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490d.dll debug폴더에 복사한다
+    C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490.dll release폴더에 복사한다
+
+소스
+#include <opencv2/opencv.hpp>
+
+int main() {
+    cv::VideoCapture cap(0); // 웹캠에 연결 (0: 기본 웹캠)
+
+    if (!cap.isOpened()) {  // 웹캠 연결 실패 확인
+        std::cerr << "Error: Unable to open the webcam" << std::endl;
+        return -1;
+    }
+
+    cv::namedWindow("CCTV", cv::WINDOW_AUTOSIZE); // 윈도우 생성
+
+    while (true) {
+        cv::Mat frame;
+        cap.read(frame); // 웹캠에서 프레임 읽기
+
+        if (frame.empty()) { // 프레임 읽기 실패 확인
+            std::cerr << "Error: Unable to read a frame" << std::endl;
+            break;
+        }
+
+        cv::imshow("CCTV", frame); // 프레임 표시
+
+        if (cv::waitKey(30) >= 0) // 키 입력을 대기하며 30ms 후 종료
+            break;
+    }
+
+    cap.release(); // 웹캠 해제
+    cv::destroyAllWindows(); // 모든 윈도우 제거
+
+    return 0;
+}
+
+간단한 검정색 객체인식
+#include <opencv2/opencv.hpp>
+
+int main() {
+    cv::VideoCapture cap(0); // 웹캠에 연결 (0: 기본 웹캠)
+
+    if (!cap.isOpened()) {  // 웹캠 연결 실패 확인
+        std::cerr << "Error: Unable to open the webcam" << std::endl;
+        return -1;
+    }
+
+    cv::namedWindow("Object Detection", cv::WINDOW_AUTOSIZE); // 윈도우 생성
+
+    cv::Mat frame, gray, diff, thresh;
+
+    while (true) {
+        // 웹캠에서 프레임 읽기
+        if (!cap.read(frame)) {
+            std::cerr << "Error: Unable to read a frame" << std::endl;
+            break;
+        }
+
+        // RGB/BGR 값이 일정 범위 내에 있을 때만 검정색으로 간주
+        cv::Mat mask;
+        cv::inRange(frame, cv::Scalar(0, 0, 0), cv::Scalar(30, 30, 30), mask);
+
+        // 경계 상자 그리기 (검정색 객체에 대해서만)
+        std::vector<std::vector<cv::Point>> contours;
+        cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+        // 결과 이미지
+        cv::Mat result = frame.clone();
+
+        for (size_t i = 0; i < contours.size(); ++i) {
+            cv::Rect boundingRect = cv::boundingRect(contours[i]);
+            // 검정색 객체에 대해서만 사각형을 그립니다.
+            if (boundingRect.area() > 100) { // 일정 크기 이상인 경우에만 그립니다.
+                cv::rectangle(result, boundingRect, cv::Scalar(0, 255, 0), 2);
+            }
+        }
+
+        // 화면에 출력
+        cv::imshow("Object Detection", result);
+
+        // 키 입력을 대기하며 30ms 후 종료
+        if (cv::waitKey(30) >= 0)
+            break;
+    }
+
+    cap.release(); // 웹캠 해제
+    cv::destroyAllWindows(); // 모든 윈도우 제거
+
+    return 0;
+}
