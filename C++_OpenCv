@@ -1,4 +1,4 @@
-C++로 CCTV만들기
+C++로 CCTV만들고 카메라앞의 객체인식하기(딥러닝X)
 
 설치
   visual studio 2002를 설치한다
@@ -9,9 +9,48 @@ C++로 CCTV만들기
 
 설정
   visual studio 2002
-  프로젝트> 속성 > "구성"과 "플랫폼" "All configurations" 및 "All Platforms" 선택
-  구성 속성 > c/c++ > 일반 > 추가 포함 디렉터리 > C:\opencv\build\include
-  구성 속성 > 링커 > 일반 > 추가 라이브러리 디렉터리 > C:\opencv\build\x64\vc16\lib
-  구성 속성 > 링커 > 입력 > 추가 종속성 > "C:\opencv\build\x64\vc16\lib\opencv_world490.lib"
+    프로젝트 > 속성 > 모든구성, 활성(x64)
+    C/C++ > 일반 > 추가 포함 디렉터리 > 편집 > C:\opencv\build\include
+    링커 > 일반 > 추가 라이브러리 디렉터리 > 편집 > C:\opencv\build\x64\vc16\lib
+    구성을 Debug로 변경 > 링커 > 입력 > 추가 종속성 > 편집 > opencv_world490d.lib
+    구성을 release 변경 > 링커 > 입력 > 추가 종속성 > 편집 > opencv_world490.lib
+    C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490d.dll debug폴더에 복사한다
+    C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490.dll release폴더에 복사한다
 
-  고급시스템설정> 환경변수 > 편집 Path에 C:/opencv/build/bin 경로를 추가해준다
+소스
+#include <opencv2/opencv.hpp>
+
+int main() {
+    cv::VideoCapture cap(0); // 웹캠에 연결 (0: 기본 웹캠)
+
+    if (!cap.isOpened()) {  // 웹캠 연결 실패 확인
+        std::cerr << "Error: Unable to open the webcam" << std::endl;
+        return -1;
+    }
+
+    cv::namedWindow("CCTV", cv::WINDOW_AUTOSIZE); // 윈도우 생성
+
+    while (true) {
+        cv::Mat frame;
+        cap.read(frame); // 웹캠에서 프레임 읽기
+
+        if (frame.empty()) { // 프레임 읽기 실패 확인
+            std::cerr << "Error: Unable to read a frame" << std::endl;
+            break;
+        }
+
+        cv::imshow("CCTV", frame); // 프레임 표시
+
+        if (cv::waitKey(30) >= 0) // 키 입력을 대기하며 30ms 후 종료
+            break;
+    }
+
+    cap.release(); // 웹캠 해제
+    cv::destroyAllWindows(); // 모든 윈도우 제거
+
+    return 0;
+}
+
+간단한 객체인식
+
+
