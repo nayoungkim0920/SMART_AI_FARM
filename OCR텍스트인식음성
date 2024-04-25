@@ -29,3 +29,5 @@ for file_name in file_list :
     
 result.close()
 print("추출이 완료되었습니다. 확인부탁드립니다.")
+
+옵션으로 학습률 높이기(머신러닝) 
