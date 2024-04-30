@@ -23,7 +23,7 @@ while True:
     cv2.imshow('video', frame)
 
     #한장의 사진을 0.033초 동안 띄움
-    k = cv2.waitKey(33)
+    k = cv2.waitKey(33)    
 
     #1을 누르면 동영상 종료
     if k == 49: #ASCII코드(1)
