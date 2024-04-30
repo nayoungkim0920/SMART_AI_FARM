@@ -177,3 +177,23 @@ cv2.imshow('dog_face', roi_img)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
+
+6) 이미지에 도형그리기고 텍스트출력하기
+
+import cv2
+
+#이미지에 원그리기 : cv2.circle()
+#이미지에 사각형 그리기 : 
+#cv2.rectangle(배경이미지,좌상단점좌표,우하단점좌표, 색상, 선두께)
+#이미지에 텍스트 입력하기 :
+#cv2.putText(배경이미지,출력내용,출력시작좌표,폰트,크기,색상,굵기) 
+
+img = cv2.imread('rudy.jpg')
+img = cv2.rectangle(img, (50,150),(200,300),(0,0,255),3)
+img = cv2.putText(img, 'Dog', (50,140), cv2.FONT_HERSHEY_SIMPLEX,
+                  0.5, (255,0,0), 2)
+cv2.imshow('dog', img)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
