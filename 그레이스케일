@@ -1,0 +1,19 @@
+1. 컬러이미지를 흑백이미지로 변경
+1) 이미지를 읽어올 때 흑백이미지로 변경
+import cv2
+import matplotlib.pyplot as plt
+
+gray_img = cv2.imread('rudy.jpg', cv2.IMREAD_GRAYSCALE)
+
+plt.imshow(gray_img, cmap='gray')
+plt.show()
+
+2) BGR로 읽어온 후, 흑백 이미지로 변환
+import cv2
+import matplotlib.pyplot as plt
+
+color_img = cv2.imread('rudy.jpg', cv2.COLOR_RGB2BGR)
+gray_img = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
+
+plt.imshow(gray_img, cmap = 'gray')
+plt.show()
