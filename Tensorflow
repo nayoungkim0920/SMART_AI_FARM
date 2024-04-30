@@ -16,7 +16,8 @@ git clone https://github.com/tensorflow/models.git
 cd models/research
 protoc object_detection/protos/*.proto --python_out=.
 pip install pillow lxml matplotlib Cython contextlib2 jupyter
-환경 설정: Python의 환경 변수에 models/research와 models/research/slim 디렉토리를 추가합니다.
+환경 설정: Python의 환경 변수에 models/research(C:\pythonLab\models\research)와 
+models/research/slim(C:\pythonLab\models\research\slim) 디렉토리, C:\pythonLab\protoc-26.1-win64\bin 를 추가합니다.
 https://github.com/protocolbuffers/protobuf/releases
 -lasted > Asset > protoc-26.1-win64.zip
 
