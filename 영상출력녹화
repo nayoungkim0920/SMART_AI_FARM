@@ -1,0 +1,33 @@
+import cv2
+
+#초당 30프레임 이미지로 구성
+#ret : 잘읽어왔는지 True, False
+#frame : 1프레임의 이미지 저장
+
+cap = cv2.VideoCapture(0)
+
+while True:
+    #동영상에서 이미지를 프레임 단위로 읽어옴
+    ret, frame = cap.read()
+
+    if not ret: #파일에 문제가 있거나 동영상이 끝났을 때
+        print('이미지 읽기 실패 또는 모두 읽음')
+        #비디오 종료
+        cap.release()
+        #윈도우 실행창 종료
+        cv2.destroyAllWindows()
+        #반복문 종료
+        break
+
+    #동영상을 잘 읽어왔을 때
+    cv2.imshow('video', frame)
+
+    #한장의 사진을 0.033초 동안 띄움
+    k = cv2.waitKey(33)
+
+    #1을 누르면 동영상 종료
+    if k == 49: #ASCII코드(1)
+        print('동영상 종료')
+        cap.release()
+        cv2.destroyAllWindows()
+        break
