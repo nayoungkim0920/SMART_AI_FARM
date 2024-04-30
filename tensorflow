@@ -1,0 +1,2 @@
+tensorflow설치
+pip install tensorflow-object-detection-api
