@@ -29,6 +29,7 @@ pip install protobuf==3.20.0
 모델은 이미지를 입력으로 사용하고, 입력 이미지에서 객체를 검출한 후, 
 검출된 객체에 대한 상자와 클래스 라벨을 그려서 시각화
 COCO 데이터 세트의 90개 클래스를 기반으로 객체를 인식
+<파이선 소스>
 import numpy as np
 import os
 import tensorflow as tf
