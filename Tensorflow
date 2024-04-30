@@ -1,0 +1,116 @@
+1. Tensorflow설치
+pip install tensorflow-object-detection-api
+
+2. Tensorflow Object Detection API 클론
+git clone https://github.com/tensorflow/models.git
+models/research/object_detection 디렉터리로 이동
+ssd_mobilenet_v2_coco 모델을 다운로드
+http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz
+
+- mscoco_label_map.pbtxt 파일을 다운로드
+https://github.com/tensorflow/models/blob/master/research/object_detection/data/mscoco_label_map.pbtxt
+
+-오류로재설치
+pip install tensorflow
+git clone https://github.com/tensorflow/models.git
+cd models/research
+protoc object_detection/protos/*.proto --python_out=.
+pip install pillow lxml matplotlib Cython contextlib2 jupyter
+환경 설정: Python의 환경 변수에 models/research와 models/research/slim 디렉토리를 추가합니다.
+https://github.com/protocolbuffers/protobuf/releases
+-lasted > Asset > protoc-26.1-win64.zip
+
+오류나서 다운그레이드
+pip install protobuf==3.20.0
+
+이미지에서 미리 학습된 SSD (Single Shot Multibox Detector) 모델을 사용하여 
+객체를 검출
+코드에서는 COCO 데이터 세트로 사전에 학습된 MobileNet V2 기반의 SSD 모델을 사용
+모델은 이미지를 입력으로 사용하고, 입력 이미지에서 객체를 검출한 후, 
+검출된 객체에 대한 상자와 클래스 라벨을 그려서 시각화
+COCO 데이터 세트의 90개 클래스를 기반으로 객체를 인식
+import numpy as np
+import os
+import tensorflow as tf
+import cv2
+
+# TensorFlow Object Detection API 모듈을 불러옵니다.
+from object_detection.utils import label_map_util
+
+# PATH_TO_CKPT에 미리 학습된 모델의 경로를 설정합니다.
+PATH_TO_CKPT = 'C:/pythonLab/models/research/object_detection/ssd_mobilenet_v2_coco_2018_03_29/frozen_inference_graph.pb'
+
+# PATH_TO_LABELS에 라벨 맵 파일의 경로를 설정합니다.
+PATH_TO_LABELS = 'C:/pythonLab/mscoco_label_map.pbtxt'
+
+# NUM_CLASSES에 검출할 객체의 클래스 수를 설정합니다.
+NUM_CLASSES = 90
+
+# 모델을 로드합니다.
+detection_graph = tf.Graph()
+with detection_graph.as_default():
+    od_graph_def = tf.compat.v1.GraphDef()
+    with tf.io.gfile.GFile(PATH_TO_CKPT, 'rb') as fid:
+        serialized_graph = fid.read()
+        od_graph_def.ParseFromString(serialized_graph)
+        tf.import_graph_def(od_graph_def, name='')
+
+# 라벨 맵을 직접 읽고 파싱합니다.
+category_index = {}
+with open(PATH_TO_LABELS, 'r') as f:
+    for line in f:
+        if 'id:' in line:
+            id = int(line.strip().split(':')[-1])
+        elif 'display_name:' in line:
+            name = line.strip().split(':')[-1].strip().strip("'")
+            category_index[id] = {'id': id, 'name': name}
+
+# 이미지를 읽어옵니다.
+image = cv2.imread('rudy.jpg')
+height, width, channels = image.shape
+image_expanded = np.expand_dims(image, axis=0)
+
+# 객체 검출을 위한 그래프 실행
+with detection_graph.as_default():
+    with tf.compat.v1.Session(graph=detection_graph) as sess:
+        # 입력 이미지에 대한 텐서를 가져옵니다.
+        image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
+        # 객체 검출 박스에 대한 텐서를 가져옵니다.
+        detection_boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
+        # 객체 검출 점수에 대한 텐서를 가져옵니다.
+        detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
+        # 검출된 객체의 클래스에 대한 텐서를 가져옵니다.
+        detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
+        # 검출된 객체의 수에 대한 텐서를 가져옵니다.
+        num_detections = detection_graph.get_tensor_by_name('num_detections:0')
+
+        # 이미지에 대한 객체 검출을 실행합니다.
+        (boxes, scores, classes, num) = sess.run(
+            [detection_boxes, detection_scores, detection_classes, num_detections],
+            feed_dict={image_tensor: image_expanded})
+
+        # 결과 시각화
+        for i in range(len(boxes[0])):
+            if scores is None or scores[0][i] > 0.5:
+                box = tuple(boxes[0][i].tolist())
+                ymin, xmin, ymax, xmax = box
+                (left, right, top, bottom) = (xmin * width, xmax * width,
+                                              ymin * height, ymax * height)
+                left, right, top, bottom = int(left), int(right), int(top), int(bottom)
+                
+                # 객체 크기 계산
+                object_width = right - left
+                object_height = bottom - top
+                
+                # 객체가 일정 크기 이상인 경우에만 표시
+                if object_width > 50 and object_height > 50:
+                    cv2.rectangle(image, (left, top), (right, bottom), (0, 255, 0), 2)
+                    class_id = int(classes[0][i])
+                    class_name = category_index[class_id]['name']
+                    cv2.putText(image, '{}: {:.2f}'.format(class_name, scores[0][i]), (left, top - 5),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+# 결과를 출력합니다.
+cv2.imshow('Object Detection', image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
