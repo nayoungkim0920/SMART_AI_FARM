@@ -143,3 +143,21 @@ while True:
 cap.release()
 cv2.destroyAllWindows()
 
+4) 픽셀값읽기변경
+import cv2
+
+#픽셀값 읽기 : 가로, 세로 값을 입력하면 해당위치의 픽셀값을 출력함
+img = cv2.imread('rudy.jpg')
+
+#이미지에서 100, 100의 픽셀값을 출력
+img[100,100]
+
+#픽셀값 변경 : 해당 위치에 BGR값을 대입해주면됨
+img[100, 300] = [0, 0, 0]
+img[101, 300] = [0, 0, 0]
+img[100, 301] = [0, 0, 0]
+img[101, 301] = [0, 0, 0]
+
+cv2.imshow('dog', img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
