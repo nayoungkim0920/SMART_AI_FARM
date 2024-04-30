@@ -390,3 +390,31 @@ while True:
         break
 
 11) 이미지에서 원찾기
+import cv2
+import numpy as np
+
+img = cv2.imread('rudy.jpg')
+
+img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+circle = cv2.HoughCircles(img_gray,  # 이미지
+                          cv2.HOUGH_GRADIENT,  # 검색방법
+                          1,  # 누산기의 이미지 해상도
+                          10,  # 원의 중심점간의 최소거리 ★
+                          param1 = 60,  # Canny 연산자의 최대값, 60으로 고정
+                          param2 = 50,  # 카운트값(숫자가 작을수록 많은수의 원을 찾음) ★
+                          minRadius = 10,  # 원의 최소 반지름 ★
+                          maxRadius = 100  # 원의 최대 반지름 ★
+                         )
+
+if circle is not None:
+    circle = np.uint16(np.around(circle))
+
+    for x,y,r, in circle[0]:
+        cv2.circle(img, (x,y),r,(255,0,0),4) 
+
+cv2.imshow('dog', img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+12) 템플릿 매칭
