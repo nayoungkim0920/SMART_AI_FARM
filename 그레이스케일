@@ -17,3 +17,22 @@ gray_img = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
 
 plt.imshow(gray_img, cmap = 'gray')
 plt.show()
+
+3) 흑백이미지 -> 이진 이미지로 변환 (마스크를 씌울때 주로 사용)
+-cv2.threshold(흑백이지미, 기준값, 할당값, 옵션) : 기준값에 따라 할당값으로 변환하는 함수
+-옵션 = cv2.THRESH_BINARY :기준값보다 크면 할당값으로 설정
+-옵션 = cv2.THRESH_BINARY_INV : 기준값보다 작으면 할당값으로 설정
+
+import cv2
+import matplotlib.pyplot as plt
+
+#1)
+#gray_img = cv2.imread('rudy.jpg', cv2.IMREAD_GRAYSCALE)
+#2)
+color_img = cv2.imread('rudy.jpg', cv2.COLOR_RGB2BGR)
+gray_img = cv2.cvtColor(color_img, cv2.COLOR_RGB2GRAY)
+
+_, binary_img = cv2.threshold(gray_img, 150, 255, cv2.THRESH_BINARY)
+
+plt.imshow(binary_img, cmap = 'gray')
+plt.show()
