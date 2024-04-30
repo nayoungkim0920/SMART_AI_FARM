@@ -1,3 +1,5 @@
+<SSD Mobilenet V2 딥러닝>
+
 1. Tensorflow설치
 pip install tensorflow-object-detection-api
 
