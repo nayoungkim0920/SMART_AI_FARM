@@ -93,3 +93,53 @@ while True:
         # 녹화 종료
         out.release()
         print("녹화 종료")
+
+3) 캡쳐하기
+import cv2
+import os
+
+# Open the video file
+cap = cv2.VideoCapture('out.avi')
+
+# Check if the video file was successfully opened
+if not cap.isOpened():
+    print('Failed to open video file')
+    exit()
+
+print('Video file opened successfully')
+
+# Create directory for saving images if it doesn't exist
+save_dir = './cap_img/'
+os.makedirs(save_dir, exist_ok=True)
+
+num = 0  # Counter for image filenames
+
+while True:
+    ret, frame = cap.read()
+
+    if not ret:
+        print('Failed to read frame or end of video')
+        break
+
+    cv2.imshow('video', frame)
+
+    k = cv2.waitKey(33)
+
+    if k == ord('q'):  # Press 'q' to exit
+        print('Exiting...')
+        break
+
+    if k == ord('s'):  # Press 's' to save frame as an image
+        print('Saving frame as image...')
+        image_path = os.path.join(save_dir, 'cap_img{}.jpg'.format(num))
+        success = cv2.imwrite(image_path, frame, params=[cv2.IMWRITE_JPEG_PROGRESSIVE, 0])
+        if success:
+            print('Image saved as', image_path)
+            num += 1
+        else:
+            print('Failed to save image')
+
+# Release VideoCapture and close OpenCV windows
+cap.release()
+cv2.destroyAllWindows()
+
