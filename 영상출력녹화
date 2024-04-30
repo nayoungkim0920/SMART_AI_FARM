@@ -1,3 +1,5 @@
+1) 영상출력하기
+
 import cv2
 
 #초당 30프레임 이미지로 구성
@@ -31,3 +33,63 @@ while True:
         cap.release()
         cv2.destroyAllWindows()
         break
+
+
+2) 녹화하기 #1:종료, 2:녹화시작, 3:녹화종료
+
+import cv2
+
+# 녹화하기
+try:
+    cap = cv2.VideoCapture(0)
+    print("동영상 읽기 성공")
+except:
+    print("동영상 읽기 실패")
+
+# 녹화 설정(녹화하기 위해서는 설정 작업 필요) 
+fps = 30.0 # 녹화할 프레임 수
+width = int(cap.get(3)) # 녹화 영상의 가로 크기
+height = int(cap.get(4)) # 녹화 영상의 세로 크기
+
+# 코덱 설정(동영상을 어떤 형식으로 압출할 것인지)
+# MPEG > mp4
+# DIVX > avi
+fcc = cv2.VideoWriter_fourcc(*'DIVX')
+
+# 녹화 저장 설정
+# cv2.VideoWriter(저장할 파일명, 코덱, 프레임 수, 동영상 크기)
+out= cv2.VideoWriter('out.avi', fcc, fps, (width,height))
+
+record = False
+
+while True:
+    ret, frame = cap.read()
+    
+    if not ret : 
+        print("이미지 읽기 실패 또는 모두 읽음") 
+        cap.release()
+        cv2.destroyAllWindows()
+        break
+        
+    cv2.imshow('animation',frame)
+    out.write(frame)
+    
+    k = cv2.waitKey(33)
+    
+    if k == 49:
+        print("동영상 종료")
+        cap.release()
+        cv2.destroyAllWindows()
+        break
+        
+    if k == 50 : # 녹화 시작 버튼(2를 눌렀을 시)
+        record = True
+        print("녹화 시작")
+        
+    if record :
+        out.write(frame)
+        
+    if k == 51:
+        # 녹화 종료
+        out.release()
+        print("녹화 종료")
