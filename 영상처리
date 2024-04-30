@@ -418,3 +418,36 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 
 12) 템플릿 매칭
+import cv2
+import numpy as np
+
+img1 = cv2.imread('rudy.jpg')
+
+img1_gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+
+img2 = cv2.imread('flower.jpg', cv2.IMREAD_GRAYSCALE)
+
+#템플릿 이미지 크기 계산
+# h : 행
+# w : 열
+h, w = img2.shape
+
+res = cv2.matchTemplate(img1_gray, img2, cv2.TM_CCOEFF_NORMED)
+res.shape
+#1에 가까울 수록 찾는 이미지에 가깝고 -1에 가까울수록 다르다
+
+#loc[::-1] 첫번재 인덱스의 값과 두번째 이니덱스의 값을 바꿈
+#zip:두개이상의 리스트나 튜플에 사용이 가능
+#동일위치에 있는 인덱스들을 모아서 출력
+#*:함수의 매개변수의 길이(수)가 정해져있지 않을때 사용
+loc = np.where(res>=0.7)
+for pt in zip(*loc[::-1]):
+    print(pt)
+
+for pt in zip(*loc[::-1]):
+    cv2.rectangle(img1, pt,(pt[0]+h,pt[1]+w), (0,0,255),2)
+
+cv2.imshow('match', img1)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
