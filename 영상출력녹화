@@ -161,3 +161,19 @@ img[101, 301] = [0, 0, 0]
 cv2.imshow('dog', img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
+
+5) 이미지영역자르기
+
+import cv2
+
+img = cv2.imread('rudy.jpg')
+
+print(img.shape)
+print(img.size)
+
+roi_img = img[150:300, 50:200]
+cv2.imshow('dog_face', roi_img)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
