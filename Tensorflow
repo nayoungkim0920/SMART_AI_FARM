@@ -116,3 +116,5 @@ with detection_graph.as_default():
 cv2.imshow('Object Detection', image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
+다음과제 : 강아지를 테디베어로 인식하고, 사람얼굴들중 인식안돼는 부분이 있어서 최적화해야함
