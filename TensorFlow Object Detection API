@@ -20,8 +20,8 @@ C:\pythonLab\models\research\slim> pip install -e .
 TensorFlow Object Detection API가 정상적으로 설치되었는지 확인하기 위해 테스트를 실행
 pip install tensorflow-object-detection-api
 
-6.
-models/research/object_detection/training 없으면 생성하고 라벨맵파일생성
+6. 학습준비
+1) models/research/object_detection/training 없으면 생성하고 라벨맵파일생성
 cup.pbtxt
 item {
   id: 1
@@ -35,3 +35,59 @@ item {
   id: 3
   name: 'tumbler'
 }
+
+2) 모델은 Faster R-CNN 선택!
+C:\cup_test
+    ├── test
+    ├── train
+    └── valid
+TensorFlow Object Detection API의 GitHub 저장소
+https://github.com/Soumil32/Generate-TFRecord-py
+압축풀고 object_detection/utils/generate_tfrecord.py 복사붙여넣기
+
+pip install pandas
+git clone https://github.com/tensorflow/tensorflow.git
+
+!!!안돼서 가상화경에서 작업했다.
+Anaconda Prompt를 관리자권한으로 연다.
+
+conda create -n myenv python=3.7
+python3 -m venv myenv
+conda activate myenv
+source myenv/bin/activate
+
+pip install pandas
+pip install tf-slim
+pip install pillow
+
+설치결과
+
+프로토콜 버퍼를 TensorFlow와 호환되는 버전인 3.20.x 이하로 다운그레이드
+pip install protobuf==3.20.0
+
+[python]
+python
+Python 3.7.16 (default, Jan 17 2023, 16:06:28) [MSC v.1916 64 bit (AMD64)] :: Anaconda, Inc. on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+
+[TensorFlow]
+pip install tensorflow==1.15
+pip install tensorflow-gpu==1.15
+pip show tensorflow
+Name: tensorflow
+Version: 1.15.0
+Summary: TensorFlow is an open source machine learning framework for everyone.
+Home-page: https://www.tensorflow.org/
+Author: Google Inc.
+Author-email: packages@tensorflow.org
+License: Apache 2.0
+Location: c:\users\nayou\anaconda3\envs\myenv\lib\site-packages
+Requires: absl-py, astor, gast, google-pasta, grpcio, keras-applications, keras-preprocessing, numpy, opt-einsum, protobuf, six, tensorboard, tensorflow-estimator, termcolor, wheel, wrapt
+Required-by:
+
+python generate_tfrecord.py -x "C:/cup_test/train" -l "C:/pythonLab/models/research/object_detection/training/cup.pbtxt" -o "C:/cup_test/train.record"
+python generate_tfrecord.py -x "C:/cup_test/valid" -l "C:/pythonLab/models/research/object_detection/training/cup.pbtxt" -o "C:/cup_test/valid.record"
+python generate_tfrecord.py -x "C:/cup_test/test" -l "C:/pythonLab/models/research/object_detection/training/cup.pbtxt" -o "C:/cup_test/test.record"
+
+C:\cup_test아래 "test.record", "train.record", "valid.record" 파일이 성공적으로 생성된다
