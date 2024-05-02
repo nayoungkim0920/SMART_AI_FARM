@@ -48,7 +48,7 @@ https://github.com/Soumil32/Generate-TFRecord-py
 pip install pandas
 git clone https://github.com/tensorflow/tensorflow.git
 
-!!!안돼서 가상화경에서 작업했다.
+3) !!!안돼서 가상화경에서 작업했다.
 Anaconda Prompt를 관리자권한으로 연다.
 
 conda create -n myenv python=3.7
@@ -60,7 +60,7 @@ pip install pandas
 pip install tf-slim
 pip install pillow
 
-설치결과
+4) 설치결과
 
 프로토콜 버퍼를 TensorFlow와 호환되는 버전인 3.20.x 이하로 다운그레이드
 pip install protobuf==3.20.0
@@ -86,8 +86,273 @@ Location: c:\users\nayou\anaconda3\envs\myenv\lib\site-packages
 Requires: absl-py, astor, gast, google-pasta, grpcio, keras-applications, keras-preprocessing, numpy, opt-einsum, protobuf, six, tensorboard, tensorflow-estimator, termcolor, wheel, wrapt
 Required-by:
 
+5) 테스트
 python generate_tfrecord.py -x "C:/cup_test/train" -l "C:/pythonLab/models/research/object_detection/training/cup.pbtxt" -o "C:/cup_test/train.record"
 python generate_tfrecord.py -x "C:/cup_test/valid" -l "C:/pythonLab/models/research/object_detection/training/cup.pbtxt" -o "C:/cup_test/valid.record"
 python generate_tfrecord.py -x "C:/cup_test/test" -l "C:/pythonLab/models/research/object_detection/training/cup.pbtxt" -o "C:/cup_test/test.record"
 
 C:\cup_test아래 "test.record", "train.record", "valid.record" 파일이 성공적으로 생성된다
+
+6) confg
+tf1을 사용함
+models/research/object_detection/configs/tf1
+/ssd_spaghettinet_edgetpu_320x320_coco17_sync_4x4.config
+SSD(Single Shot Multibox Detector) 모델의 구성 파일
+models/research/object_detection/configs/tf1 복사한다.
+이미있어서 있는파일수정함
+# SpaghettiNet Feature Extractor optimized for EdgeTPU.
+# Trained on COCO17 from scratch.
+#
+# spaghettinet_edgetpu_s
+# Achieves 26.2% mAP on COCO17 at 400k steps.
+# 1.31ms Edge TPU latency at 1 billion MACs, 3.4 million params.
+#
+# spaghettinet_edgetpu_m
+# Achieves 27.4% mAP on COCO17 at 400k steps.
+# 1.55ms Edge TPU latency at 1.25 billion MACs, 4.1 million params.
+#
+# spaghettinet_edgetpu_l
+# Achieves 28.02% mAP on COCO17 at 400k steps.
+# 1.75ms Edge TPU latency at 1.57 billion MACs, 5.7 million params.
+#
+# TPU-compatible.
+
+model {
+  ssd {
+    inplace_batchnorm_update: true
+    freeze_batchnorm: false
+    num_classes: 90  # 수정: 데이터셋의 클래스 수에 맞게 설정
+    box_coder {
+      faster_rcnn_box_coder {
+        y_scale: 10.0
+        x_scale: 10.0
+        height_scale: 5.0
+        width_scale: 5.0
+      }
+    }
+    matcher {
+      argmax_matcher {
+        matched_threshold: 0.5
+        unmatched_threshold: 0.5
+        ignore_thresholds: false
+        negatives_lower_than_unmatched: true
+        force_match_for_each_row: true
+        use_matmul_gather: true
+      }
+    }
+    similarity_calculator {
+      iou_similarity {
+      }
+    }
+    encode_background_as_zeros: true
+    anchor_generator {
+      ssd_anchor_generator {
+        num_layers: 5
+        min_scale: 0.2
+        max_scale: 0.95
+        aspect_ratios: 1.0
+        aspect_ratios: 2.0
+        aspect_ratios: 0.5
+        aspect_ratios: 3.0
+        aspect_ratios: 0.3333333
+      }
+    }
+    image_resizer {
+      fixed_shape_resizer {
+        height: 320
+        width: 320
+      }
+    }
+    box_predictor {
+      convolutional_box_predictor {
+        min_depth: 0
+        max_depth: 0
+        num_layers_before_predictor: 0
+        use_dropout: false
+        dropout_keep_probability: 0.8
+        kernel_size: 3
+        use_depthwise: true
+        box_code_size: 4
+        apply_sigmoid_to_scores: false
+        class_prediction_bias_init: -4.6
+        conv_hyperparams {
+          activation: RELU_6,
+          regularizer {
+            l2_regularizer {
+              weight: 0.00004
+            }
+          }
+          initializer {
+            random_normal_initializer {
+              stddev: 0.03
+              mean: 0.0
+            }
+          }
+          batch_norm {
+            train: true,
+            scale: true,
+            center: true,
+            decay: 0.97,
+            epsilon: 0.001,
+          }
+        }
+      }
+    }
+    feature_extractor {
+      type: 'ssd_spaghettinet'
+      spaghettinet_arch_name: 'spaghettinet_edgetpu_m'  # 수정: 사용할 모델 아키텍처 선택
+      use_explicit_padding: false
+    }
+    loss {
+      classification_loss {
+        weighted_sigmoid_focal {
+          alpha: 0.75,
+          gamma: 2.0
+        }
+      }
+      localization_loss {
+        weighted_smooth_l1 {
+          delta: 1.0
+        }
+      }
+      classification_weight: 1.0
+      localization_weight: 1.0
+    }
+    normalize_loss_by_num_matches: true
+    normalize_loc_loss_by_codesize: true
+    post_processing {
+      batch_non_max_suppression {
+        score_threshold: 1e-8
+        iou_threshold: 0.6
+        max_detections_per_class: 100
+        max_total_detections: 100
+        use_static_shapes: true
+      }
+      score_converter: SIGMOID
+    }
+  }
+}
+
+train_config: {
+  batch_size: 512
+  sync_replicas: true
+  startup_delay_steps: 0
+  replicas_to_aggregate: 32
+  num_steps: 400000
+  data_augmentation_options {
+    random_horizontal_flip {
+    }
+  }
+  data_augmentation_options {
+    ssd_random_crop {
+    }
+  }
+  optimizer {
+    momentum_optimizer: {
+      learning_rate: {
+        cosine_decay_learning_rate {
+          learning_rate_base: 0.8
+          total_steps: 400000
+          warmup_learning_rate: 0.13333
+          warmup_steps: 2000
+        }
+      }
+      momentum_optimizer_value: 0.9
+    }
+    use_moving_average: false
+  }
+  max_number_of_boxes: 100
+  unpad_groundtruth_tensors: false
+}
+
+train_input_reader: {
+  label_map_path: "C:/cup_test/label_map.txt"  # 수정: 레이블 맵 파일의 경로
+  tf_record_input_reader {
+    input_path: "C:/cup_test/train.record"  # 수정: 학습에 사용할 TFRecord 파일의 경로
+  }
+}
+
+eval_config: {
+  metrics_set: "coco_detection_metrics"
+  use_moving_averages: false
+}
+
+eval_input_reader: {
+  label_map_path: "C:/cup_test/label_map.txt"  # 수정: 레이블 맵 파일의 경로
+  shuffle: false
+  num_epochs: 1
+  tf_record_input_reader {
+    input_path: "C:/cup_test/valid.record"  # 수정: 평가에 사용할 TFRecord 파일의 경로
+  }
+}
+
+graph_rewriter {
+  quantization {
+    delay: 40000
+    weight_bits: 8
+    activation_bits: 8
+  }
+}
+
+C:/cup_test/label_map.txt 만들고
+1 cup
+2 bottle
+3 tumbler
+
+[테스트]
+python C:/pythonLab/models/research/object_detection/legacy/train.py ^
+--pipeline_config_path="C:\pythonLab\models\research\object_detection\samples\configs\ssdlite_mobilenet_v2_coco.config" ^
+--train_dir=C:\cup_test\result
+
+pip install scipy
+scipy-1.7.3 
+
+C:\pythonLab\models\research\object_detection\models\keras_models\resnet_v1.py
+수정 tf_keras > tensorflow.keras
+
+pip install matplotlib
+
+python C:/pythonLab/models/research/object_detection/legacy/train.py --pipeline_config_path="C:\pythonLab\models\research\object_detection\samples\configs\ssdlite_mobilenet_v2_coco.config" --train_dir="C:\cup_test\result"
+c:/result/pipeline.config 가 생성됨
+python C:/pythonLab/models/research/object_detection/legacy/train.py --pipeline_config_path="C:\cup_test\result\pipeline.config" --train_dir="C:\cup_test\result"
+
+모델 내보내기
+훈련된 모델을 내보내는 것은 추론을 위해 모델을 사용할 수 있도록 하는 중요한 단계
+TensorFlow SavedModel 형식으로 내보내려면
+export_inference_graph.py 스크립트를 사용합니다. 
+이 스크립트는 훈련된 그래프를 추론용 그래프로 변환하고 저장합니다.
+"C:\pythonLab\models\research\object_detection\export_inference_graph.py"
+python C:\pythonLab\models\research\object_detection\export_inference_graph.py --input_type image_tensor --pipeline_config_path C:/cup_test/result/pipeline.config --trained_checkpoint_prefix C:/cup_test/result/model.ckpt --output_directory C:/cup_test/exported_model
+"C:\Users\nayou\Downloads\models-master\models-master\research\object_detection\samples\configs\ssdlite_mobilenet_v2_coco.config"
+C:\cup_test\result에 pipeline.config로 저장
+
+안돼서 명령어 수정
+python C:/pythonLab/models/research/object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path=C:/cup_test/result/pipeline.config --trained_checkpoint_prefix=C:/cup_test/result/model.ckpt --output_directory=C:/cup_test/exported_model
+pip install numpy==1.16.6
+
+<label_map.pbtxt생성하기>
+create_label_map.py
+def create_label_map(labels, output_path):
+    with open(output_path, 'w') as f:
+        for idx, label in enumerate(labels, start=1):
+            f.write('item {\n')
+            f.write(f'  id: {idx}\n')
+            f.write(f'  name: \'{label}\'\n')
+            f.write('}\n')
+
+if __name__ == "__main__":
+    labels = ["label1", "label2", "label3"]  # 라벨 리스트를 여기에 넣으세요
+    output_path = "label_map.pbtxt"  # 라벨 맵 파일 경로를 여기에 지정하세요
+    create_label_map(labels, output_path)
+>> "C:\pythonLab\label_map.pbtxt" 생성됨
+python create_label_map.py --label_map_path=C:\pythonLab\label_map.pbtxt
+"C:\cup_test\label_map.pbtxt" 이동
+-cvs
+python C:\pythonLab\models\research\object_detection\utils\generate_tfrecord.py --csv_input=C:/cup_test/train_labels.csv --output_path=C:/cup_test/train.record --label_map=C:/cup_test/label_map.txt
+python generate_tfrecord.py --csv_input=C:/cup_test/test_labels.csv --output_path=C:/cup_test/test.record --label_map=C:/cup_test/label_map.txt
+-roboflow
+python C:\pythonLab\models\research\object_detection\utils\generate_tfrecord.py --image_dir=C:/cup_test/train/images --label_dir=C:/cup_test/train/labels --output_path=C:/cup_test/train.record --label_map=C:/cup_test/label_map.txt
+python C:\pythonLab\models\research\object_detection\utils\generate_tfrecord.py --image_dir=C:/cup_test/test/images --label_dir=C:/cup_test/test/labels --output_path=C:/cup_test/test.record --label_map=C:/cup_test/label_map.txt
+python C:\pythonLab\models\research\object_detection\utils\generate_tfrecord.py --image_dir=C:/cup_test/valid/images --label_dir=C:/cup_test/valid/labels --output_path=C:/cup_testvalid.record --label_map=C:/cup_test/label_map.txt
+
+
