@@ -357,3 +357,5 @@ python C:\pythonLab\models\research\object_detection\utils\generate_tfrecord.py 
 
 pip install pycocotools
 
+python C:\pythonLab\models\research\object_detection\model_main.py --pipeline_config_path=C:\cup_test\result\pipeline.config --model_dir=C:\cup_test\train_result --alsologtostderr --num_train_steps=200000 --num_eval_steps=10
+python C:\pythonLab\models\research\object_detection\model_main.py --pipeline_config_path=C:\cup_test\result\pipeline.config --model_dir=C:\cup_test\train_result --alsologtostderr --checkpoint_dir=C:\cup_test\train_result --run_once=True
