@@ -1,0 +1,37 @@
+TensorFlow Object Detection API
+
+1. Python 및 TensorFlow 설치
+
+2. TensorFlow Object Detection API 클론
+git clone https://github.com/tensorflow/models.git
+
+3. 프로토콜 버퍼 컴파일
+cd models/research/
+protoc object_detection/protos/*.proto --python_out=.
+
+4. 환경 변수 설정
+PYTHONPATH 환경 변수에 models/research와 models/research/slim 디렉토리의 경로를 추가
+이렇게 하면 Python이 TensorFlow Object Detection API를 정상적으로 import할 수 있습니다
+
+5. 라이브러리 설치
+C:\pythonLab\models\research\slim> pip install -e .
+
+5. 테스트
+TensorFlow Object Detection API가 정상적으로 설치되었는지 확인하기 위해 테스트를 실행
+pip install tensorflow-object-detection-api
+
+6.
+models/research/object_detection/training 없으면 생성하고 라벨맵파일생성
+cup.pbtxt
+item {
+  id: 1
+  name: 'bottle'
+}
+item {
+  id: 2
+  name: 'cup'
+}
+item {
+  id: 3
+  name: 'tumbler'
+}
