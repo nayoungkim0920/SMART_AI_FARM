@@ -355,4 +355,5 @@ python C:\pythonLab\models\research\object_detection\utils\generate_tfrecord.py 
 python C:\pythonLab\models\research\object_detection\utils\generate_tfrecord.py --image_dir=C:/cup_test/test/images --label_dir=C:/cup_test/test/labels --output_path=C:/cup_test/test.record --label_map=C:/cup_test/label_map.txt
 python C:\pythonLab\models\research\object_detection\utils\generate_tfrecord.py --image_dir=C:/cup_test/valid/images --label_dir=C:/cup_test/valid/labels --output_path=C:/cup_testvalid.record --label_map=C:/cup_test/label_map.txt
 
+pip install pycocotools
 
