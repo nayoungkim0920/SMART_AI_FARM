@@ -158,5 +158,6 @@ python c:/yolov5/detect.py --weights C:\yolov5\runs\train\exp28\weights\best.pt 
 
 --컵인식률90%이상나옴
 python c:/yolov5/train.py --img 640 --batch 16 --epochs 200 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0
-![이미지 설명](ujh190806_41.jpg)
+<img src="ujh190806_41.jpg" alt="이미지 설명">
+
 
