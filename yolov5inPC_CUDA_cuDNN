@@ -1,4 +1,5 @@
 yolov5 in PC
+사양:  NVIDIA GeForce RTX 4060 Laptop GPU 16G RAM
 
 1. CUDA cuDNN 설치 합니다.
 Compute Unified Device Architecture
@@ -149,3 +150,7 @@ mAP50-95 : 0.5에서 0.95까지의 IoU임계 값 범위에서의 평균 정밀
 python c:/yolov5/train.py --img 640 --batch 16 --epochs 50 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0 --name exp --optimizer SGD --project c:/yolov5result
 python c:/yolov5/train.py --img 640 --batch 16 --epochs 50 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0 --name exp --optimizer Adam --project c:/yolov5result
 python c:/yolov5/detect.py --weights C:\yolov5result\exp20\weights\best.pt --img 640 --conf 0.50 --source C:\images --device 0
+
+NVIDIA GeForce RTX 4060 Laptop GPU 16G RAM
+11:04
+python c:/yolov5/train.py --img 640 --batch 16 --epochs 100 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0
