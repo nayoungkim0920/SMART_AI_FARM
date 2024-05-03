@@ -1,0 +1,219 @@
+1) 영상출력하기
+#include <opencv2/opencv.hpp>
+
+int main() {
+    // 웹캠 열기
+    cv::VideoCapture cap(0);
+    if (!cap.isOpened()) {
+        std::cout << "웹캠을 열 수 없습니다." << std::endl;
+        return -1;
+    }
+
+    // 윈도우 생성
+    cv::namedWindow("video", cv::WINDOW_AUTOSIZE);
+
+    // 동영상 재생
+    cv::Mat frame;
+    while (true) {
+        // 동영상에서 프레임 읽기
+        cap.read(frame);
+
+        if (frame.empty()) {
+            std::cout << "이미지를 읽을 수 없거나 동영상이 끝났습니다." << std::endl;
+            break;
+        }
+
+        // 동영상 보여주기
+        cv::imshow("video", frame);
+
+        // 33ms 동안 대기
+        int key = cv::waitKey(33);
+
+        // '1'을 누르면 동영상 종료
+        if (key == 49) {
+            std::cout << "동영상 종료" << std::endl;
+            break;
+        }
+    }
+
+    // 리소스 해제
+    cap.release();
+    cv::destroyAllWindows();
+
+    return 0;
+}
+
+2) 녹화하기
+#include <opencv2/opencv.hpp> // OpenCV 라이브러리를 포함
+
+int main() {
+    cv::VideoCapture cap(0); // 웹캠 열기
+    if (!cap.isOpened()) { // 웹캠이 열리지 않으면
+        std::cout << "동영상을 읽을 수 없습니다." << std::endl;
+        return -1; // 프로그램 종료
+    }
+
+    double fps = 30.0; // 녹화할 프레임 수
+    int width = cap.get(cv::CAP_PROP_FRAME_WIDTH); // 영상 가로 크기
+    int height = cap.get(cv::CAP_PROP_FRAME_HEIGHT); // 영상 세로 크기
+
+    // 녹화 설정(코덱 설정)
+    cv::VideoWriter out("out.avi", cv::VideoWriter::fourcc('D', 'I', 'V', 'X'), fps, cv::Size(width, height));
+
+    bool record = false; // 녹화 상태를 나타내는 변수
+
+    while (true) {
+        cv::Mat frame; // 프레임을 저장할 Mat 객체 생성
+        cap.read(frame); // 웹캠에서 프레임 읽기
+
+        if (frame.empty()) { // 프레임이 비어있으면
+            std::cout << "이미지를 읽을 수 없거나 동영상이 끝났습니다." << std::endl;
+            break; // 무한루프 탈출
+        }
+
+        cv::imshow("animation", frame); // 프레임을 화면에 표시
+        out.write(frame); // 프레임을 동영상 파일에 저장
+
+        int key = cv::waitKey(33); // 33ms 동안 키 입력 대기
+
+        if (key == 49) { // '1'을 누르면
+            std::cout << "동영상 종료" << std::endl;
+            break; // 무한루프 탈출
+        }
+
+        if (key == 50) { // '2'를 누르면
+            record = true; // 녹화 시작
+            std::cout << "녹화 시작" << std::endl;
+        }
+
+        if (record) { // 녹화 중이면
+            out.write(frame); // 프레임을 동영상 파일에 저장
+        }
+
+        if (key == 51) { // '3'을 누르면
+            out.release(); // 녹화 종료
+            std::cout << "녹화 종료" << std::endl;
+        }
+    }
+
+    cap.release(); // 웹캠 해제
+    cv::destroyAllWindows(); // 모든 창 닫기
+
+    return 0; // 프로그램 종료
+}
+
+3) 캡쳐하기
+C++17의 <filesystem> 헤더를 사용
+솔루션 탐색기에서 프로젝트를 마우스 오른쪽 버튼으로 클릭하고 "속성"을 선택합니다.
+구성 속성 대화 상자에서 "C/C++" 항목을 선택합니다.
+"언어" 옵션으로 이동하여 "C++ 표준"을 선택합니다.
+드롭다운 목록에서 "C++17 (/std:c++17)"을 선택합니다.
+
+#include <opencv2/opencv.hpp> // OpenCV 라이브러리를 포함
+#include <iostream>
+#include <filesystem> // C++17 이상에서 파일 및 디렉토리 작업을 위한 헤더
+
+int main() {
+    cv::VideoCapture cap("out.avi"); // 동영상 파일 열기
+
+    // 동영상 파일이 성공적으로 열렸는지 확인
+    if (!cap.isOpened()) {
+        std::cout << "동영상 파일을 열 수 없습니다." << std::endl;
+        return -1; // 프로그램 종료
+    }
+
+    std::cout << "동영상 파일이 성공적으로 열렸습니다." << std::endl;
+
+    std::string save_dir = "./cap_img/"; // 이미지 저장 디렉토리 경로
+    std::filesystem::create_directories(save_dir); // 디렉토리 생성 (C++17 이상)
+
+    int num = 0; // 이미지 파일명을 위한 카운터
+
+    while (true) {
+        cv::Mat frame; // 프레임 저장용 Mat 객체
+
+        cap.read(frame); // 동영상에서 프레임 읽기
+
+        if (frame.empty()) { // 프레임이 비어있으면
+            std::cout << "프레임을 읽을 수 없거나 동영상이 끝났습니다." << std::endl;
+            break; // 무한루프 탈출
+        }
+
+        cv::imshow("video", frame); // 프레임 화면에 표시
+
+        int key = cv::waitKey(33); // 33ms 동안 키 입력 대기
+
+        if (key == 'q') { // 'q' 키를 누르면
+            std::cout << "종료..." << std::endl;
+            break; // 무한루프 탈출
+        }
+
+        if (key == 's') { // 's' 키를 누르면
+            std::cout << "프레임을 이미지로 저장..." << std::endl;
+            std::string image_path = save_dir + "cap_img" + std::to_string(num) + ".jpg"; // 이미지 파일 경로 생성
+            bool success = cv::imwrite(image_path, frame, {cv::IMWRITE_JPEG_PROGRESSIVE, 0}); // 이미지 저장
+            if (success) {
+                std::cout << "이미지가 저장되었습니다: " << image_path << std::endl;
+                num++; // 이미지 카운터 증가
+            } else {
+                std::cout << "이미지 저장 실패" << std::endl;
+            }
+        }
+    }
+
+    cap.release(); // 비디오 캡처 해제
+    cv::destroyAllWindows(); // 모든 OpenCV 창 닫기
+
+    return 0; // 프로그램 종료
+}
+
+4) 픽셀값읽기변경
+#include <opencv2/opencv.hpp> // OpenCV 라이브러리 포함
+
+int main() {
+    // 이미지 파일 읽기
+    cv::Mat img = cv::imread("rudy.jpg");
+
+    // 이미지에서 (100, 100) 위치의 픽셀값 출력
+    cv::Vec3b pixel = img.at<cv::Vec3b>(100, 100);
+    std::cout << "Pixel value at (100, 100): B=" << (int)pixel[0] << " G=" << (int)pixel[1] << " R=" << (int)pixel[2] << std::endl;
+
+    // 이미지에서 픽셀값 변경
+    img.at<cv::Vec3b>(100, 100) = cv::Vec3b(0, 0, 255);
+    img.at<cv::Vec3b>(100, 101) = cv::Vec3b(0, 0, 255);
+    //img.at<cv::Vec3b>(100, 301) = cv::Vec3b(0, 0, 255);
+    //img.at<cv::Vec3b>(101, 301) = cv::Vec3b(0, 0, 255);
+
+    // 변경된 이미지 출력
+    cv::imshow("dog", img);
+    cv::waitKey(0);
+    cv::destroyAllWindows();
+
+    return 0;
+}
+
+5) 이미지영역 자르기(ROI:Region of Interest)
+#include <opencv2/opencv.hpp>
+
+int main() {
+	cv::Mat img = cv::imread("rudy.jpg");
+
+	if (img.empty()) {
+		std::cout << "Could not read the image" << std::endl;
+		return -1;
+	}
+
+	std::cout << "Image shape: " << img.size() << std::endl;
+	std::cout << "Image size: " << img.total() << std::endl;
+	
+	cv::Rect roi(50, 150, 150, 150); //ROI
+	cv::Mat roi_img = img(roi); //Extract ROI
+
+	cv::imshow("dog_face", roi_img);
+	cv::waitKey(0);
+	cv::destroyAllWindows();
+
+	return 0;
+}
+
+6) 이미지에 도형그리기고 텍스트출력하기
