@@ -1,6 +1,9 @@
 yolov5 in PC
 
 1. CUDA cuDNN 설치 합니다.
+Compute Unified Device Architecture
+CUDA Deep Neural Network library
+
 CUDA 버전확인: nvidia-smi
 CUDA : 12.0
 CUDA capability : 8.6
