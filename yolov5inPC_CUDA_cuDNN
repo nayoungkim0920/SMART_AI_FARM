@@ -155,3 +155,8 @@ NVIDIA GeForce RTX 4060 Laptop GPU 16G RAM
 11:04 ~ 11:31
 python c:/yolov5/train.py --img 640 --batch 16 --epochs 100 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0
 python c:/yolov5/detect.py --weights C:\yolov5\runs\train\exp28\weights\best.pt --img 640 --conf 0.50 --source C:\images --device 0
+
+--컵인식률90%이상나옴
+python c:/yolov5/train.py --img 640 --batch 16 --epochs 200 --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0
+
+
