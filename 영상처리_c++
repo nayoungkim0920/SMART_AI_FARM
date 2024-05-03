@@ -217,3 +217,116 @@ int main() {
 }
 
 6) 이미지에 도형그리기고 텍스트출력하기
+#include <opencv2/opencv.hpp>
+#include <iostream>
+
+int main() {
+
+	//이미지파일을 읽어와서 Mat객체에 저장
+	cv::Mat img = cv::imread("rudy.jpg");
+
+	//이미지에 직사각형 그리기
+	cv::rectangle(img
+		, cv::Point(50, 150)
+		, cv::Point(200, 300)
+		, cv::Scalar(0, 0, 255)
+		, 3);
+
+	//이미지에 텍스트 입력하기
+	cv::putText(img //cv::Mat or cv::UMat or cv::MatExpr ..
+		, "Dog" //문자열
+		, cv::Point(50, 140) //시작위치
+		, cv::FONT_HERSHEY_SIMPLEX  //폰트형태 FONT_HERSHEY_PLAIN 
+		, 0.5 //텍스트의 크기 비율
+		, cv::Scalar(255, 0, 0) //텍스트의 색상 Scalar(Blue, Green, Red)
+		, 2); //텍스트 선의 두께, 기본 1
+
+	//이미지를 윈도우에 표시
+	cv::imshow("dog", img);
+
+	//사용자 입력 대기
+	cv::waitKey(0);
+
+	//모든 생성된 창 닫기
+	cv::destroyAllWindows();
+
+	return 0;
+}
+
+7) HSV(Hue, Saturation, Value)
+HSV색상공간으로 이미지를 변환한 후 이를 보여주는것은 
+이미지처리 및 컴퓨터 비전 분야에서 흔히 사용된다.
+이러한 변환은 이미지에서 색상 정보를 분석하거나 특정 색상 범위를 추출하는 등의
+작업을 수행할 때 유용하다.
+일반적으로 HSV색상 공간은 RGB보다 색상정보를 나타내는 데 더 적합하며,
+특히 색상에 관련된 작업을수행할 때 유용하다.
+예를 들어 이미지에서 특정 색상의 물체를 추출하거나 배경을 제거하는 경우에
+HSV공간을 사용하여 더 쉽게 처리할 수 있다.
+
+ㄱ. 색상추적하기
+import cv2
+import numpy as np
+
+dog = cv2.imread('rudy.jpg')
+dog_hsv = cv2.cvtColor(dog, cv2.COLOR_BGR2HSV)
+
+cv2.imshow('dog', dog_hsv)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+ㄴ. 최소값과 최대값 사이에 있는 값을 마스크로 지정, 범위안에 들어간 값들만 출력
+마스킹 : 이미지 처리에서 특정 영역을 선택하거나 제외하는 데 사용되는 기술
+이진이미지(흑백)로 표현되며, 마스크라고도한다.
+이진이미지에서 픽셀 값이 0인 부분은 해당 영역을 표시하지 않는것으로 간주되고
+0이 아닌 부분은표시되는 영역을 나타낸다. 
+주로 이미지의 일부분에만 특정 작업을 수행하려는 경우에 사용
+배경을 제거하거나 특정 색상을 강조하기 위해 마스킹을 사용할 수 있다.
+이미지 합성, 객체 추적, 이미지 분할 등의 작업에서도 마스킹이 사용될 수 있다.
+이 코드에서는 HSV 이미지에서 특정 색상을 마스킹하여 해당 색상만을 강조하고
+나머지는 제거하는데 사용된다. 특정 색상 범위에 해당하는 픽셀은 흰색으로 표시하고
+그외의 픽셀은 검은색으로 표시하여 해당 범위의 픽셀만을 유지한다. 이후
+해당 마스크를 사용하여 이미지에 효과를 적용하거나 필터링을 수행할 수 있다.
+#include <opencv2/opencv.hpp>
+#include <iostream>
+
+int main() {
+
+	//이미지 파일 읽기
+	cv::Mat dog = cv::imread("rudy.jpg");
+
+	//BGR을 HSV로 변환(이미지 픽셀값을 색상/채도/명도로 나타냄)
+	cv::Mat dog_hsv;
+	cv::cvtColor(dog, dog_hsv, cv::COLOR_BGR2HSV);
+
+	//마스크 최소 및 최대 범위 지정(색상,채도,밝기)
+	//마스크가 감지해야될 색상,채도,밝기의 최소값
+	//-10:빨간색(Hue값이 0에 가까운 값)을 중심으로 좌우로 약간의 여유 줌
+	//100:채도, 최소 채도100이상이어야 마스크에 포함
+	//100:밝기, 최소 밝기100이상이어야 마스크에 포함
+	cv::Scalar lower(-10, 100, 100); 
+	//마스크의 최대 범위(마스크가 감지해야 할 색상,채도,밝기의 최대값 설정
+	//10:빨간색(Hue값이 0에 가까운 값)을 중심으로 좌우로 약간의 여유를 줌
+	//255:채도의 최대값
+	//255:밝기의 최대값
+	cv::Scalar upper(10, 255, 255);
+
+	//범위에 따라 마스크 생성
+	cv::Mat mask;
+	//지정된 범위내의 픽셀을 흰색으로, 그렇지 않은 픽셀은 검은색으로 설정
+	cv::inRange(dog_hsv, lower, upper, mask);
+
+	//이미지에 마스크 적용
+	cv::Mat result;
+	cv::bitwise_and(dog, dog_hsv, result, mask = mask);
+
+	//변환된 이미지 표시
+	cv::imshow("dog", dog_hsv);
+
+	cv::waitKey(0);
+
+	cv::destroyAllWindows();
+
+	return 0;
+}
+
+8) 모서리검출(Canny edge)
