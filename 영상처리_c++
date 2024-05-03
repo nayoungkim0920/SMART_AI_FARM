@@ -330,3 +330,70 @@ int main() {
 }
 
 8) 모서리검출(Canny edge)
+#include <opencv2/opencv.hpp>
+#include <iostream>
+
+int main() {
+	//이미지 읽기
+	cv::Mat img = cv::imread("rudy.jpg");
+
+	//그레이스케일 이미지로 변환
+	cv::Mat img_gray;
+	cv::cvtColor(img, img_gray, cv::COLOR_RGB2GRAY);
+
+	//좌표값을 찾음
+	std::vector<cv::Point2f> corners;
+	//이미지에서 코너를 찾음
+	cv::goodFeaturesToTrack(img_gray, corners, 25, 0.01, 10);
+
+	//모서리에 점 표시
+	for (int i = 0; i < corners.size(); i++) {
+		//코너의 좌표를 정수로 변환
+		int x = cvRound(corners[i].x);
+		int y = cvRound(corners[i].y);
+		//이미지에 점을 그림
+		cv::circle(img, cv::Point(x, y), 3, cv::Scalar(255, 0, 0), -1);
+	}
+
+	//이미지 표시
+	cv::imshow("corners", img);
+
+	cv::waitKey(0);
+	cv::destroyAllWindows();
+
+	return 0;
+}
+
+9) 윤곽선 검출
+#include <opencv2/opencv.hpp>
+#include <iostream>
+
+int main() {
+
+	//이미지읽기(그레이스케일)
+	cv::Mat img = cv::imread("rudy.jpg", cv::IMREAD_GRAYSCALE);
+
+	//이미지 표시
+	cv::imshow("original", img);
+
+	//Canny edge 검출
+	cv::Mat edge;
+	cv::Canny(img, edge, 50, 250);
+
+	//엣지를 반전하여 역방향 엣지 생성
+	cv::Mat edge_reverse = cv::Scalar::all(255) - edge;
+
+	//엣지 이미지 표시
+	cv::imshow("edge", edge);
+	cv::imshow("edge_reverse", edge_reverse);
+
+	//사용자 키 입력 대기
+	cv::waitKey(0);
+
+	//모든 창 닫기
+	cv::destroyAllWindows();
+
+	return 0;
+}
+
+10) 얼굴, 눈 영역 검출
