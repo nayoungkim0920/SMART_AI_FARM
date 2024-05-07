@@ -1,1 +1,1 @@
-openCV, Torch, Yolo, tensorflow, c++, python과 의료용영상(dicom) 2d/3d 영상처리를 공부합니다.
+Cuda, cuDnn, openCV, pyTorch, Yolo, tensorflow, c++, python, medical 2d/3d computer vision
