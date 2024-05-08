@@ -16,6 +16,22 @@ C++로 CCTV만들고 카메라앞의 객체인식하기(딥러닝X)
     구성을 release 변경 > 링커 > 입력 > 추가 종속성 > 편집 > opencv_world490.lib
     C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490d.dll debug폴더에 복사한다
     C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490.dll release폴더에 복사한다
+    
+  pyTorch
+    git clone --recursive https://github.com/pytorch/pytorch.git
+    C:\Users\nayou\pytorch>pip install torch torchvision torchaudio
+    import torch
+    print(torch.__version__)
+    2.3.0+cpu
+  --에러 1700
+  --https://pytorch.org/
+  --https://data-gardner.tistory.com/107
+  nvcc --version
+  nvcc: NVIDIA (R) Cuda compiler driver
+  Copyright (c) 2005-2022 NVIDIA Corporation
+  Built on Wed_Sep_21_10:41:10_Pacific_Daylight_Time_2022
+  Cuda compilation tools, release 11.8, V11.8.89
+  Build cuda_11.8.r11.8/compiler.31833905_0
 
 소스
 #include <opencv2/opencv.hpp>
