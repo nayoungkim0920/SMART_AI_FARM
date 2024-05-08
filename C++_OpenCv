@@ -126,4 +126,72 @@ int main() {
 }
 
 
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <torch/script.h>
+
+int main(int argc, const char* argv[]) {
+    if (argc != 5) {
+        std::cerr << "Usage: " << argv[0] << " weights img_size conf_threshold source" << std::endl;
+        return -1;
+    }
+
+    // Parse command line arguments
+    std::string weights = argv[1];
+    int img_size = std::stoi(argv[2]);
+    float conf_threshold = std::stof(argv[3]);
+    std::string source = argv[4];
+
+    try {
+        // Load YOLOv5 model
+        torch::jit::script::Module model = torch::jit::load(weights);
+
+        // Set model to evaluation mode
+        model.eval();
+
+        // Open webcam
+        cv::VideoCapture cap(0);
+        if (!cap.isOpened()) {
+            std::cerr << "Error opening webcam" << std::endl;
+            return -1;
+        }
+
+        // Initialize variables
+        cv::Mat frame;
+
+        while (cap.read(frame)) {
+            // Resize frame to match model's expected input size
+            cv::resize(frame, frame, cv::Size(img_size, img_size));
+
+            // Convert OpenCV Mat to Torch tensor
+            auto img_tensor = torch::from_blob(frame.data, { 1, frame.rows, frame.cols, 3 }, torch::kByte);
+            img_tensor = img_tensor.permute({ 0, 3, 1, 2 }).to(torch::kFloat32);
+            img_tensor /= 255.0;
+
+            // Inference
+            auto output = model.forward({ img_tensor }).toTensor();
+
+            // Display results
+            // TODO: Implement post-processing and visualization
+
+            // Show the frame
+            cv::imshow("YOLOv5", frame);
+
+            // Check for quit key
+            if (cv::waitKey(1) == 'q') {
+                break;
+            }
+        }
+
+        // Release resources
+        cap.release();
+        cv::destroyAllWindows();
+
+        return 0;
+    }
+    catch (const c10::Error& e) {
+        std::cerr << "Error loading the model: " << e.what() << std::endl;
+        return -1;
+    }
+}
 
