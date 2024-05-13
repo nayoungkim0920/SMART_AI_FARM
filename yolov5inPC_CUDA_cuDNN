@@ -223,6 +223,23 @@ while cap.isOpened():
 cap.release()
 cv2.destroyAllWindows()
 
+--pkl파일만들기(c++ & torch)
+import os
+import pickle
 
+# 가중치 파일 경로
+weights_path = "C:\\yolov5\\runs\\train\\exp35\\weights\\best.pt"
+# 저장할 파일 경로 (예: 사용자의 홈 디렉토리 아래의 'Documents' 디렉토리)
+output_path = os.path.join(os.path.expanduser("~"), "Documents", "constants.pkl")
+
+# 가중치 파일을 읽어서 바이너리로 읽기
+with open(weights_path, 'rb') as f:
+    model_weights = f.read()
+
+# constants.pkl 파일에 저장
+with open(output_path, 'wb') as f:
+    f.write(model_weights)
+
+print(f"'constants.pkl' 파일이 '{output_path}' 경로에 생성되었습니다.")
 
 
