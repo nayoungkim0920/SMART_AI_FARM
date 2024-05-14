@@ -333,3 +333,90 @@ Epoch [2/5], Loss: 0.4989442527294159
 Epoch [3/5], Loss: 0.40619611740112305
 Epoch [4/5], Loss: 0.31730762124061584
 Epoch [5/5], Loss: 0.2393183559179306
+
+-- c++에서 모델로드가 계속 에러나서 
+-- torch script로 만들어 모델로드 성공
+import os
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torchvision import transforms
+from torch.utils.data import DataLoader, Dataset
+from PIL import Image
+import yaml
+
+# 데이터 설정 로드
+with open('c:/data.yaml', 'r', encoding='utf-8') as f:
+    data_config = yaml.safe_load(f)
+
+# 데이터셋 클래스 정의
+class CustomDataset(Dataset):
+    def __init__(self, root_dir, transform=None):
+        self.root_dir = root_dir
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.root_dir)
+
+    def __getitem__(self, idx):
+        img_name = 'c://image.jpg'  # 이미지 파일명을 포함하여 경로 생성
+        image = Image.open(img_name)
+        label = 0  # 클래스 라벨은 임의로 0으로 설정
+        if self.transform:
+            image = self.transform(image)
+        return image, label
+
+# 모델 정의
+class SimpleNN(nn.Module):
+    def __init__(self):
+        super(SimpleNN, self).__init__()
+        self.fc1 = nn.Linear(28*28, 128)
+        self.fc2 = nn.Linear(128, 64)
+        self.fc3 = nn.Linear(64, 1)  # 이진 분류를 위해 출력 뉴런 개수를 1로 변경
+
+    def forward(self, x):
+        x = x.view(x.size(0), -1)
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        x = torch.sigmoid(self.fc3(x))  # 이진 분류를 위해 시그모이드 함수 사용
+        return x
+
+# 데이터셋 변환 및 로드
+transform = transforms.Compose([
+    transforms.Grayscale(),  # 흑백 이미지로 변환
+    transforms.Resize((28, 28)),  # 이미지 크기를 28x28로 조정
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
+
+train_dataset = CustomDataset(data_config['train'], transform=transform)
+train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+
+# 손실 함수 정의
+criterion = nn.BCELoss()  # 이진 교차 엔트로피 손실 함수 사용
+
+# 모델 초기화
+model = SimpleNN()
+
+# 최적화 알고리즘 선택
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+# 모델 훈련
+num_epochs = 20
+for epoch in range(num_epochs):
+    running_loss = 0.0
+    for inputs, labels in train_loader:
+        optimizer.zero_grad()
+        outputs = model(inputs)
+        outputs = outputs.squeeze(dim=1)  # 2D 텐서를 1D 텐서로 변환
+        loss = criterion(outputs, labels.float())  # BCELoss를 사용하므로 레이블을 float으로 변환
+        loss.backward()
+        optimizer.step()
+        
+        running_loss += loss.item()
+    print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {running_loss/len(train_loader)}')
+
+# TorchScript로 모델 저장
+example_input = torch.rand(1, 1, 28, 28)  # 예제 입력 생성
+traced_model = torch.jit.trace(model, example_input)
+traced_model.save("constants.pt")
