@@ -420,3 +420,6 @@ for epoch in range(num_epochs):
 example_input = torch.rand(1, 1, 28, 28)  # 예제 입력 생성
 traced_model = torch.jit.trace(model, example_input)
 traced_model.save("constants.pt")
+
+--Intel® oneAPI Math Kernel Library: Windows*
+https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html?operatingsystem=windows&windows-install=offline
