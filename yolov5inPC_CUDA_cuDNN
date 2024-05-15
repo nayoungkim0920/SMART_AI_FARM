@@ -428,6 +428,10 @@ https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.h
 INTEL MKL ERROR: 지정된 모듈을 찾을 수 없습니다. mkl_avx2.1.dll.
 Intel MKL FATAL ERROR: Cannot load mkl_avx2.1.dll or mkl_def.1.dll. 
 
+mkl_avx2.1.dll
+mkl_def.1.dll 이파일들을 계속 설정해줘도 에러나 남
+
+
 --gpu로 하기로함
 --posershell에서
 # 파일 다운로드
@@ -435,3 +439,7 @@ Invoke-WebRequest -Uri "https://download.pytorch.org/libtorch/cu111/libtorch-cxx
 
 # 압축 해제
 Expand-Archive -Path "libtorch-cxx11-abi-shared-with-deps-1.10.0+cu111.zip" -DestinationPath "libtorch"
+
+-- 2.3.0+cu121은 CUDA 12.1을 사용하는 GPU 지원 버전
+-- 설치되어있는 CUDA Toolkit 버전(11.8)이안맞다고해서 
+CUDA Toolkit 12.1 Downloads 설치
