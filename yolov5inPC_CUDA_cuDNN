@@ -423,3 +423,15 @@ traced_model.save("constants.pt")
 
 --Intel® oneAPI Math Kernel Library: Windows*
 https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html?operatingsystem=windows&windows-install=offline
+
+--cpu로 하는데 계속 에러남 
+INTEL MKL ERROR: 지정된 모듈을 찾을 수 없습니다. mkl_avx2.1.dll.
+Intel MKL FATAL ERROR: Cannot load mkl_avx2.1.dll or mkl_def.1.dll. 
+
+--gpu로 하기로함
+--posershell에서
+# 파일 다운로드
+Invoke-WebRequest -Uri "https://download.pytorch.org/libtorch/cu111/libtorch-cxx11-abi-shared-with-deps-1.10.0%2Bcu111.zip" -OutFile "libtorch-cxx11-abi-shared-with-deps-1.10.0+cu111.zip"
+
+# 압축 해제
+Expand-Archive -Path "libtorch-cxx11-abi-shared-with-deps-1.10.0+cu111.zip" -DestinationPath "libtorch"
