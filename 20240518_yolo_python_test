@@ -37,19 +37,19 @@ Results saved to runs\detect\exp34
 
 --실시간검출
 --완성된bets.pt로 (C:\yolov5\runs\train\exp35\weights\best.pt) 웹캠 실시간 감지프로그램 작성 및 테스트(90%이상 인식률)
-#camDetect.py
+--compiler(py39:conda)
+
 import cv2
 import torch
 from yolov5.models.experimental import attempt_load
 from yolov5.utils.general import non_max_suppression
 from pathlib import Path
+from datetime import datetime
 
 # Initialize YOLOv5 model
 weights = 'C:/yolov5/runs/train/exp35/weights/best.pt'
-device = 'cpu'  # Assuming you want to run inference on CPU
-model = torch.load(weights, map_location=device)['model'].float()  # Load model
-model.eval()  # Set model to evaluation mode
-stride = int(model.stride.max())
+device = 'cuda' if torch.cuda.is_available() else 'cpu'  # Check if GPU is available
+model = attempt_load(weights).float().to(device)  # Load model
 
 # Open webcam
 cap = cv2.VideoCapture(0)
@@ -86,8 +86,17 @@ while cap.isOpened():
             if det is not None and len(det):
                 for *xyxy, conf, cls in det:
                     label = f'{model.names[int(cls)]} {conf:.2f}'
-                    cv2.rectangle(frame, (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3])), (0, 255, 0), 2)
-                    cv2.putText(frame, label, (int(xyxy[0]), int(xyxy[1]) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    
+                    # Draw bounding box if confidence is over 90%
+                    if conf > 0.9:
+                        cv2.rectangle(frame, (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3])), (0, 255, 0), 2)
+                        cv2.putText(frame, label, (int(xyxy[0]), int(xyxy[1]) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    
+                        # Capture the frame
+                        current_time = datetime.now().strftime("%Y%m%d%H%M%S")
+                        capture_name = f'{current_time}.jpg'
+                        cv2.imwrite(capture_name, frame)
+                        print(f'Image captured with confidence: {conf:.2f}')
 
     cv2.imshow('YOLOv5 Object Detection', frame)
     
@@ -98,3 +107,4 @@ while cap.isOpened():
 # Release resources
 cap.release()
 cv2.destroyAllWindows()
+
