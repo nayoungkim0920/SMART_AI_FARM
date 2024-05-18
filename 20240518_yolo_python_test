@@ -36,3 +36,65 @@ python c:/yolov5/detect.py --weights C:\yolov5\runs\train\exp36\weights\best.pt 
 Results saved to runs\detect\exp34
 
 --실시간검출
+--완성된bets.pt로 (C:\yolov5\runs\train\exp35\weights\best.pt) 웹캠 실시간 감지프로그램 작성 및 테스트(90%이상 인식률)
+#camDetect.py
+import cv2
+import torch
+from yolov5.models.experimental import attempt_load
+from yolov5.utils.general import non_max_suppression
+from pathlib import Path
+
+# Initialize YOLOv5 model
+weights = 'C:/yolov5/runs/train/exp35/weights/best.pt'
+device = 'cpu'  # Assuming you want to run inference on CPU
+model = torch.load(weights, map_location=device)['model'].float()  # Load model
+model.eval()  # Set model to evaluation mode
+stride = int(model.stride.max())
+
+# Open webcam
+cap = cv2.VideoCapture(0)
+
+while cap.isOpened():
+    # Read frame from webcam
+    ret, frame = cap.read()
+    if not ret:
+        print('Error reading frame from webcam')
+        break
+
+    # Resize frame to match model's expected input size
+    img = cv2.resize(frame, (640, 480))
+    
+    # Convert image to torch tensor
+    img = torch.from_numpy(img).to(device)
+    img = img.float()  # Convert to float
+    img /= 255.0  # Normalize to 0-1
+    
+    # Ensure correct shape and number of channels
+    img = img.permute(2, 0, 1).unsqueeze(0)  # Change shape to [1, 3, H, W]
+
+    # Inference
+    pred = model(img)[0]
+
+    # Display results
+    for det in pred:
+        det[:, :4] *= torch.tensor([frame.shape[1]/640, frame.shape[0]/480, frame.shape[1]/640, frame.shape[0]/480], device=device)  # Scale coordinates to original frame size
+        det[:, :4] = det[:, :4].clamp(min=0, max=frame.shape[1])  # Clamp coordinates within frame
+        
+        # Ensure det is a tensor before passing it to non_max_suppression
+        if isinstance(det, torch.Tensor):
+            det = non_max_suppression(det.unsqueeze(0), 0.4, 0.5)[0]  # Perform non-maximum suppression
+            if det is not None and len(det):
+                for *xyxy, conf, cls in det:
+                    label = f'{model.names[int(cls)]} {conf:.2f}'
+                    cv2.rectangle(frame, (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3])), (0, 255, 0), 2)
+                    cv2.putText(frame, label, (int(xyxy[0]), int(xyxy[1]) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+    cv2.imshow('YOLOv5 Object Detection', frame)
+    
+    # Check for quit key
+    if cv2.waitKey(1) == ord('q'):
+        break
+
+# Release resources
+cap.release()
+cv2.destroyAllWindows()
