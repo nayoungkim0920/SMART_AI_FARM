@@ -38,7 +38,14 @@ Results saved to runs\detect\exp34
 --실시간검출
 --완성된bets.pt로 (C:\yolov5\runs\train\exp35\weights\best.pt) 웹캠 실시간 감지프로그램 작성 및 테스트(90%이상 인식률)
 --compiler(py39:conda)
+--C:\ObjectDetect\yolov5설치(pip install yolov5설치)
+--pip install dill
+    Using cached dill-0.3.8-py3-none-any.whl.metadata (10 kB)
+    Using cached dill-0.3.8-py3-none-any.whl (116 kB)
+    Installing collected packages: dill
+    Successfully installed dill-0.3.8
 
+#"C:\ObjectDetect\camDetect.py"
 import cv2
 import torch
 from yolov5.models.experimental import attempt_load
