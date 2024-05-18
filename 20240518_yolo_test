@@ -1,0 +1,38 @@
+--가상환경
+(base) C:\Windows\System32>conda create --name py39 python=3.9
+(base) C:\Windows\System32>conda activate py39
+(py39) C:\Windows\System32>conda update conda
+
+--패키지설치
+(py39) C:\Windows\System32>cd C:\yolov5
+(py39) C:\yolov5>pip install -r requirements.txt
+
+--NVIDIA CUDA 컴파일 드라이버 nvcc버전출력
+(py39) C:\yolov5>nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2023 NVIDIA Corporation
+Built on Wed_Feb__8_05:53:42_Coordinated_Universal_Time_2023
+Cuda compilation tools, release 12.1, V12.1.66
+Build cuda_12.1.r12.1/compiler.32415258_0
+
+--파이썬버전출력
+(py39) C:\yolov5>python --version
+Python 3.9.19
+
+--제거(필요한 경우만)
+(py39) C:\yolov5>pip uninstall torch torchvision torchaudio
+
+--설치
+(py39)C:\yolov5>pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+Installing collected packages: tbb, intel-openmp, mkl, torch, torchvision, torchaudio
+Successfully installed intel-openmp-2021.4.0 mkl-2021.4.0 tbb-2021.11.0 torch-2.3.0+cu121 torchaudio-2.3.0+cu121 torchvision-0.18.0+cu121
+
+--학습(간단하게 10번)
+python c:/yolov5/train.py --img 640 --batch 16 --epochs 10  --data c:/data.yaml --weights c:/yolov5/models/yolov5m.pt --device 0
+runs\train\exp36\weights\best.pt
+
+--이미지검출
+python c:/yolov5/detect.py --weights C:\yolov5\runs\train\exp36\weights\best.pt --img 640 --conf 0.50 --source C:\images --device 0
+Results saved to runs\detect\exp34
+
+--실시간검출
