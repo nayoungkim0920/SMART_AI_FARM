@@ -1,0 +1,28 @@
+// OpenCV를 사용하여 
+// 1. 이미지를 로드하고
+// 2. 흑백이미지로 변환하며 표시한다.
+
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+int main() {
+
+	//이미지 로드
+	cv::Mat image = cv::imread("images/rudy.jpg", cv::IMREAD_COLOR);
+
+	if (image.empty()) {
+		std::cout << "이미지를 불러올 수 없습니다." << std::endl;
+		return -1;
+	}
+
+	//이미지를 그레이스케일로 변환
+	cv::Mat grayImage;
+	cv::cvtColor(image, grayImage, cv::COLOR_BGR2GRAY);
+
+	//이미지 표시
+	cv::imshow("원본 이미지", image);
+	cv::imshow("흑백 이미지", grayImage);
+	cv::waitKey(0);
+
+	return 0;
+}
