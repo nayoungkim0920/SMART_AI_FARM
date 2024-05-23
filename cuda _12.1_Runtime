@@ -146,3 +146,25 @@ CPU를 통한 합 : 3와 4의 합은 7입니다.
 GPU를 통한 합 : 3와 4의 합은 7입니다.
 CPU 속도: 8.2e-06 초
 GPU 속도: 1.83205 초
+
+//IPP설정 visual studio 2002
+w_ipp_oneapi_p_2021.11.0.533_offline.exe
+    프로젝트>속성>Intel Libraries for oneAPI>IPP>Default Linking Method
+    C/C++>일반>추가포함디렉터리>C:\Program Files %28x86%29\Intel\oneAPI\ipp\2021.11\include
+    링커>일반>추가라이브러리디렉터리>C:\Program Files %28x86%29\Intel\oneAPI\ipp\latest\lib
+    링커>입력>추가종속성>
+    ippimt.lib
+    ippvmmt.lib
+    ippsmt.lib
+    ippcoremt.lib
+
+//OpenCV설정 visual studio 2002
+https://github.com/opencv/opencv/releases
+opencv-4.9.0-windows.exe
+    프로젝트 > 속성 > 모든구성, 활성(x64)
+    C/C++ > 일반 > 추가 포함 디렉터리 > 편집 > C:\opencv\build\include
+    링커 > 일반 > 추가 라이브러리 디렉터리 > 편집 > C:\opencv\build\x64\vc16\lib
+    구성을 Debug로 변경 > 링커 > 입력 > 추가 종속성 > 편집 > opencv_world490d.lib
+    구성을 release 변경 > 링커 > 입력 > 추가 종속성 > 편집 > opencv_world490.lib
+    C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490d.dll debug폴더에 복사한다
+    C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490.dll release폴더에 복사한다
