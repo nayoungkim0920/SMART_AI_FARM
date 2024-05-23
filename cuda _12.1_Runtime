@@ -1,1 +1,148 @@
+//visual studio 2022 설치
 
+//CUDA 12.1 설치
+cuda_12.1.0_531.14_windows.exe
+
+//환경변수설정
+CUDA_HOME C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1
+CUDA_PATH C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1
+CUDNN_HOME C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\bin
+Path
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\bin
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\libnvvp
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\libnvvp
+C:\Program Files\NVIDIA\CUDNN\v9.1\bin
+C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\bin
+C:\Program Files\NVIDIA Corporation\Nsight Compute 2023.1.0\
+C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR
+
+//cuda _12.1_Runtime 프로젝트생성
+//빌드 종속성 > 사용자 지정 빌드 > 사용자지정빌드 > CUDA 12.1 체크 확인
+//도구 > 옵션 > 텍스트 편집기 > cu Microsoft Visual C++, cuh Microsoft Visual C++ 추가
+//프로젝트 > 속성
+(활성(Debug),x64) <- cufft, cublas library는 64bit환경에서만 사용가능
+  C/C++ > 일반 > 추가 포함 디렉터리 : $(CUDA_PATH)\include
+  링커 > 일반 > 추가 라이브러리 디렉터리 : $(CUDA_PATH)\lib\x64
+  링커 > 입력 > 추가 종속성 : cuda.lib, cudart.lib, cublas.lib, cufft.lib
+//소스 파일, 헤더 파일 폴더 만들고 각각에 CGPUACC.cu, main.cpp, CGPUACC.cuh를 만들어 넣어준다
+//CGPUACC.cu > 속성 > 일반> 항목표시 : CUDA C/C++
+//CGpUACC.cuh > 속성 > 일반 > 항목표시 : 사용자지정빌드도구
+
+//CUDA함수를C++에서 사용하기 위해서 cu파일에 C++로 사용할 수 있게 해준다.
+//CGPUACC.cuh
+#pragma once
+#include <cuda_runtime.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+    class CGPUACC
+    {
+    public:
+        CGPUACC(void);
+        virtual ~CGPUACC(void);
+        int sum_cuda(int a, int b, int* c);
+    };
+
+#ifdef __cplusplus
+}
+#endif
+
+// CGPUACC.cu
+#include "CGPUACC.cuh"
+#include "cuda.h"
+#include <iostream>
+#include <cufft.h>
+#include "cublas_v2.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+CGPUACC::CGPUACC(void) {
+
+}
+
+CGPUACC::~CGPUACC(void) {
+
+}
+
+__global__ void sum_kernel(int a, int b, int* c) {
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    c[tid] = a + b;
+}
+
+int CGPUACC::sum_cuda(int a, int b, int* c)
+{
+    int* f;
+
+    cudaMalloc((void**)&f, sizeof(int) * 1);
+    cudaMemcpy(f, c, sizeof(int) * 1, cudaMemcpyHostToDevice);
+
+    sum_kernel << <1, 1 >> > (a, b, f);
+
+    cudaMemcpy(c, f, sizeof(int) * 1, cudaMemcpyDeviceToHost);
+
+    cudaFree(f);
+
+    return true;
+}
+
+
+
+//CPU와 GPU 속도차이를 출력해본다.
+// main.cpp
+#include <iostream>
+#include <chrono> // 시간 측정을 위한 헤더
+#include "CGPUACC.cuh"
+
+int sum_int(int a, int b);
+
+int sum_int(int a, int b) {
+    int c;
+    c = a + b;
+
+    return c;
+}
+
+int main() {
+    int a, b, c;
+    int d;
+
+    a = 3;
+    b = 4;
+
+    // CPU로 계산한 속도 측정 시작
+    auto start_cpu = std::chrono::steady_clock::now();
+
+    c = sum_int(3, 4);
+
+    // CPU로 계산한 속도 측정 종료
+    auto end_cpu = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_cpu = end_cpu - start_cpu;
+
+    // CUDA로 계산한 속도 측정 시작
+    auto start_gpu = std::chrono::steady_clock::now();
+
+    CGPUACC gpuacc;
+    gpuacc.sum_cuda(a, b, &d);
+
+    // CUDA로 계산한 속도 측정 종료
+    auto end_gpu = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_gpu = end_gpu - start_gpu;
+
+    printf("CPU를 통한 합 : %d와 %d의 합은 %d입니다.\n", a, b, c);
+    printf("GPU를 통한 합 : %d와 %d의 합은 %d입니다.\n", a, b, d);
+
+    // 계산 속도 출력
+    std::cout << "CPU 속도: " << elapsed_cpu.count() << " 초" << std::endl;
+    std::cout << "GPU 속도: " << elapsed_gpu.count() << " 초" << std::endl;
+
+    return 0;
+}
+
+//결과
+CPU를 통한 합 : 3와 4의 합은 7입니다.
+GPU를 통한 합 : 3와 4의 합은 7입니다.
+CPU 속도: 8.2e-06 초
+GPU 속도: 1.83205 초
