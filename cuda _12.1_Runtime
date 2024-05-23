@@ -260,3 +260,29 @@ int main() {
 CPU로 그레이스케일 변환에 걸린 시간: 0.0104955 초
 CUDA로 그레이스케일 변환에 걸린 시간: 0.0000027 초
 IPP로 그레이스케일 변환에 걸린 시간: 0.0000173 초
+
+#include <iostream> //표준 입력/출력 스트림
+#include <opencv2/opencv.hpp> //OpenCV 함수들
+#include <ipp.h> //Intel IPP 라이브러리
+#inlcude <cuda_runtime.h> //CUDA런 타임 라이브러리
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
