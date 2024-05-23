@@ -1,1 +1,62 @@
+//IPP설정
+w_ipp_oneapi_p_2021.11.0.533_offline.exe
+프로젝트>속성>Intel Libraries for oneAPI>IPP>Default Linking Method
+C/C++>일반>추가포함디렉터리>C:\Program Files %28x86%29\Intel\oneAPI\ipp\2021.11\include
+링커>일반>추가라이브러리디렉터리>C:\Program Files %28x86%29\Intel\oneAPI\ipp\latest\lib
+링커>입력>추가종속성>
+ippimt.lib
+ippvmmt.lib
+ippsmt.lib
+ippcoremt.lib
 
+//그레이스케일변환하기
+#include <iostream>
+#include <ipp.h>
+#include <opencv2/opencv.hpp>
+
+int main() {
+    // IPP 초기화
+    ippInit();
+
+    // 이미지 파일 경로 설정
+    std::string imagePath = "C:\\myLab\\Project4\\Project4\\images\\rudy.jpg";
+
+    // 이미지 파일 로드
+    cv::Mat originalImage = cv::imread(imagePath);
+    if (originalImage.empty()) {
+        std::cerr << "이미지를 읽을 수 없습니다: " << imagePath << std::endl;
+        return -1;
+    }
+
+    // 이미지를 그레이스케일로 변환
+    cv::Mat grayImage;
+    cv::cvtColor(originalImage, grayImage, cv::COLOR_BGR2GRAY);
+
+    // 이미지 크기 가져오기
+    int width = grayImage.cols;
+    int height = grayImage.rows;
+
+    // 이미지 데이터 할당
+    Ipp8u* imageData = new Ipp8u[width * height];
+    if (imageData == nullptr) {
+        std::cerr << "이미지 데이터를 할당하는 데 문제가 발생했습니다." << std::endl;
+        return -1;
+    }
+
+    // OpenCV Mat 데이터를 IPP 데이터로 복사
+    memcpy(imageData, grayImage.data, width * height);
+
+    // OpenCV를 사용하여 이미지 표시
+    cv::namedWindow("Original Image", cv::WINDOW_NORMAL);
+    cv::imshow("Original Image", originalImage);
+
+    cv::namedWindow("Gray Image", cv::WINDOW_NORMAL);
+    cv::imshow("Gray Image", grayImage);
+
+    cv::waitKey(0);
+
+    // 메모리 해제
+    delete[] imageData;
+
+    return 0;
+}
