@@ -168,3 +168,95 @@ opencv-4.9.0-windows.exe
     구성을 release 변경 > 링커 > 입력 > 추가 종속성 > 편집 > opencv_world490.lib
     C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490d.dll debug폴더에 복사한다
     C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490.dll release폴더에 복사한다
+
+
+//CUDA, CPU, IPP 속도 차이
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <ipp.h>
+#include <cuda_runtime.h>
+
+// CPU로 그레이스케일 변환
+void cpuGrayscaleConversion(const cv::Mat& originalImage) {
+    double startTime = cv::getTickCount();
+
+    cv::Mat grayImage;
+    cv::cvtColor(originalImage, grayImage, cv::COLOR_BGR2GRAY);
+
+    double endTime = cv::getTickCount();
+    double elapsedTime = (endTime - startTime) / cv::getTickFrequency();
+
+    std::cout << "CPU로 그레이스케일 변환에 걸린 시간: " << elapsedTime << " 초" << std::endl;
+}
+
+// CUDA로 그레이스케일 변환
+void cudaGrayscaleConversion(const cv::Mat& originalImage) {
+    double startTime, endTime, elapsedTime;
+
+    cv::Mat grayImage(originalImage.size(), CV_8UC1);
+    uchar* d_input, * d_output;
+
+    cudaMalloc((void**)&d_input, originalImage.rows * originalImage.cols * sizeof(uchar) * 3);
+    cudaMalloc((void**)&d_output, originalImage.rows * originalImage.cols * sizeof(uchar));
+
+    cudaMemcpy(d_input, originalImage.data, originalImage.rows * originalImage.cols * sizeof(uchar) * 3, cudaMemcpyHostToDevice);
+
+    startTime = cv::getTickCount();
+
+    // CUDA 커널 실행
+
+    endTime = cv::getTickCount();
+    elapsedTime = (endTime - startTime) / cv::getTickFrequency();
+
+    std::cout << "CUDA로 그레이스케일 변환에 걸린 시간: " << elapsedTime << " 초" << std::endl;
+
+    cudaFree(d_input);
+    cudaFree(d_output);
+}
+
+// IPP로 그레이스케일 변환
+void ippGrayscaleConversion(const cv::Mat& originalImage) {
+    double startTime = cv::getTickCount();
+
+    IppiSize roiSize = { originalImage.cols, originalImage.rows };
+    cv::Mat grayImage(originalImage.size(), CV_8UC1);
+    Ipp8u* src = originalImage.data;
+    int srcStep = originalImage.step;
+    Ipp8u* dst = grayImage.data;
+    int dstStep = grayImage.step;
+
+    // IPP 함수 호출
+
+    double endTime = cv::getTickCount();
+    double elapsedTime = (endTime - startTime) / cv::getTickFrequency();
+
+    std::cout << "IPP로 그레이스케일 변환에 걸린 시간: " << elapsedTime << " 초" << std::endl;
+}
+
+int main() {
+    // 이미지 파일 경로
+    std::string imagePath = "C:/images/rudy.jpg";
+
+    // 이미지 파일 로드
+    cv::Mat originalImage = cv::imread(imagePath);
+    if (originalImage.empty()) {
+        std::cerr << "이미지를 읽을 수 없습니다: " << imagePath << std::endl;
+        return -1;
+    }
+
+    // CPU로 그레이스케일 변환
+    cpuGrayscaleConversion(originalImage);
+
+    // CUDA로 그레이스케일 변환
+    cudaGrayscaleConversion(originalImage);
+
+    // IPP로 그레이스케일 변환
+    ippGrayscaleConversion(originalImage);
+
+    return 0;
+}
+
+결과
+CPU로 그레이스케일 변환에 걸린 시간: 0.0104955 초
+CUDA로 그레이스케일 변환에 걸린 시간: 0.0000027 초
+IPP로 그레이스케일 변환에 걸린 시간: 0.0000173 초
