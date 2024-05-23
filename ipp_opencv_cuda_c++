@@ -20,7 +20,49 @@ opencv-4.9.0-windows.exe
     C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490d.dll debug폴더에 복사한다
     C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490.dll release폴더에 복사한다
 
-//C++ 그레이스케일변환하기
+//OpenCV만을 사용하여 그레이스케일로 변환하는 시간: 0.0103371 초
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+int main() {
+    // 이미지 파일 경로 설정
+    std::string imagePath = "C:\\myLab\\Project4\\Project4\\images\\rudy.jpg";
+
+    // 이미지 파일 로드
+    cv::Mat originalImage = cv::imread(imagePath);
+    if (originalImage.empty()) {
+        std::cerr << "이미지를 읽을 수 없습니다: " << imagePath << std::endl;
+        return -1;
+    }
+
+    // 이미지를 그레이스케일로 변환
+    cv::Mat grayImage;
+
+    // 시간 측정 시작
+    double startTime = cv::getTickCount();
+
+    cv::cvtColor(originalImage, grayImage, cv::COLOR_BGR2GRAY);
+
+    // 시간 측정 종료
+    double endTime = cv::getTickCount();
+    double elapsedTime = (endTime - startTime) / cv::getTickFrequency();
+
+    // OpenCV를 사용하여 이미지 표시
+    cv::namedWindow("Original Image", cv::WINDOW_NORMAL);
+    cv::imshow("Original Image", originalImage);
+
+    cv::namedWindow("Gray Image (OpenCV Only)", cv::WINDOW_NORMAL);
+    cv::imshow("Gray Image (OpenCV Only)", grayImage);
+
+    cv::waitKey(0);
+
+    // 시간 출력
+    std::cout << "OpenCV만을 사용하여 그레이스케일로 변환하는 시간: " << elapsedTime << " 초" << std::endl;
+
+    return 0;
+}
+
+//OpenCV와 IPP를 함께 사용하여 그레이스케일로 변환하는 시간: 0.0098348 초
 #include <iostream>
 #include <ipp.h>
 #include <opencv2/opencv.hpp>
@@ -41,33 +83,30 @@ int main() {
 
     // 이미지를 그레이스케일로 변환
     cv::Mat grayImage;
+
+    // 시간 측정 시작
+    double startTime = cv::getTickCount();
+
     cv::cvtColor(originalImage, grayImage, cv::COLOR_BGR2GRAY);
 
-    // 이미지 크기 가져오기
-    int width = grayImage.cols;
-    int height = grayImage.rows;
-
-    // 이미지 데이터 할당
-    Ipp8u* imageData = new Ipp8u[width * height];
-    if (imageData == nullptr) {
-        std::cerr << "이미지 데이터를 할당하는 데 문제가 발생했습니다." << std::endl;
-        return -1;
-    }
-
-    // OpenCV Mat 데이터를 IPP 데이터로 복사
-    memcpy(imageData, grayImage.data, width * height);
+    // 시간 측정 종료
+    double endTime = cv::getTickCount();
+    double elapsedTime = (endTime - startTime) / cv::getTickFrequency();
 
     // OpenCV를 사용하여 이미지 표시
     cv::namedWindow("Original Image", cv::WINDOW_NORMAL);
     cv::imshow("Original Image", originalImage);
 
-    cv::namedWindow("Gray Image", cv::WINDOW_NORMAL);
-    cv::imshow("Gray Image", grayImage);
+    cv::namedWindow("Gray Image (OpenCV + IPP)", cv::WINDOW_NORMAL);
+    cv::imshow("Gray Image (OpenCV + IPP)", grayImage);
 
     cv::waitKey(0);
 
-    // 메모리 해제
-    delete[] imageData;
+    // 시간 출력
+    std::cout << "OpenCV와 IPP를 함께 사용하여 그레이스케일로 변환하는 시간: " << elapsedTime << " 초" << std::endl;
 
     return 0;
 }
+
+//CUDA
+//https://hiuaa.tistory.com/39
