@@ -105,12 +105,69 @@
 머신러닝과 딥러닝과 긴밀하게 연관되어 있으며, 얼굴 인식, 문자 인식(OCR), 생체인식
 등의 분야에 활용된다.
 
+//고성능 이미지 처리(High-Performance Iamge Processing)와 신호처리
+대규모 데이터나 복잡한 계산이 필요한 이미지와 신호 처리 작업을 효율적이고 빠르게 
+수행하는 기술 및 방법론을 말한다. 특히 실시간 응용프로그램, 대규모 데이터 분석, 
+고해상도 이미지 및 비디오 처리 등에서 중요한 역할을 한다. 
+- 고성능 이미지 처리
+이미지 처리 작업을 빠르고 효율적으로 수행하기 위해 다양한 최적화 기술을 사용하는 것
+1. 병렬 처리(Parallel Processing)
+  1) 멀티스레딩(Multithreading) : 여러 스레드를 사용하여 이미지 처리 작업을 병렬로  
+    수행한다. OpenCV) cv::parallel_for_
+  2) GPU 가속(GPU Accleration) : GPU를 사용하여 대규모 병렬 연산을 수행
+    CUDA나 OpenCL(Open Computing Language)을 사용하여 
+    이미지 처리 작업을 GPU에서 수행할 수 있다.
+2. 하드웨어 가속(Hardware Acceleration)
+  1) 전용 하드웨어 : FPGA나 ASIC 같은 전용 하드웨어를 사용하여 이미지 처리 작업을 
+    가속화 한다.
+  2) GPU 및 TPU : 그래픽 처리 장치(GPU) 및 텐서 처리 장치(TPU)를 사용하여 복잡한 
+    이미지 처리 알고리즘을 빠르게 수행한다.
+3. 효율적인 알고리즘(Efficient Algorithms)
+  1) 최적화된 알고리즘 : 처리 속도를 높이기 위해 최적화된 알고리즘을 사용
+    Fast Fourier Transform(FFT)을 사용한 주파수 도메인 처리가 있다.
+  2) 분할 정복 기법 : 큰 문제를 작은 부분으로 나누어 처리 속도를 개선한다.
+4. 라이브러리와 프레임워크
+  1) OpenCV : 다양한최적화 기능을 제공하는 오픈 소스 컴퓨터 비전 라이브러리이다.
+  2) IntelIPP : Intel 프로세서에서 최적화된이미지 및 신호 처리 라이브러리 이다.
+  3) CUDA : NVIDIA의 GPU에서 고성능 연산을 수행하기 위한 병렬 컴퓨팅 플랫폼이다.
+
+-고성능 신호 처리(High-Performace Signal Processing)
+오디오, 비디오, 센서 데이터와 같은 다양한 신호를 효율적으로 분석하고 처리하는 기술 
+1. 실시간 처리(Real-Time Processing)
+  1) 실시간 시스템 : 데이터가 들어오는 즉시 처리하는 시스템을 구축한다.
+   실시간 오디오 신호처리를 위한 DSP(Digital Signal Processor)사용
+  2) 병렬 및 분산처리(Parallel and Distributed Processing)
+    - 병렬 컴퓨팅 : 다중코어 CPU 및 GPU를 사용하여 신호 처리 작업을 병렬로 수행
+    - 클라우드 컴퓨팅 : 분산 컴퓨팅 리소스를 활용하여 대규모 신호 처리 작업을 수행
+  3) 최적화된 알고리즘
+    - Fast Fourier Transform(FFT) : 주파수 도메인에서 신호를 분석하는 삐르고
+     효율적인 알고리즘이다.
+    - 웨이블릿 변환(Wavelet Transform) : 신호의 시간 및 주파수 정보를 동싱 분석할 
+     수 있는 알고리즘이다.
+  4) 전용 하드웨어 사용
+    - DSP(Digital Signal Processors) :신호 처리 작업을 빠르게 수행할 수 있는 전용
+      프로세서 이다.
+    - FPGA : 하드웨어 수준에서 신호 처리 알고리즘을 구현하여 성능을 최적화 한다.
+  5) 라이브러리와 프레임워크
+    - Intel Ipp : Intel 프로세서에ㅐ 최적화된 신호 처리 함수들을 제공한다.
+    - CUDA : GPU를 사용하여  신호 처리 작업을 병렬로 수행할 수 있는 플랫폼
+    - MATLAB : 신호 처리 및 분석을 위한 강력한 도구와 라이브러리를 제공
+
 //OpenCV(Open Source Computer Vision Library)
 컴퓨터 비전 관련 작업을 수행하기 위해 사용되는 오픈소스라이브러리
 
 //Intel IPP(Integrated Performance Primitives)
 고성능 이미지 처리와 신호 처리를 위한 라이브러리, 
 Intel 프로세서에서 최적화된 성능을 제공
+  - 의료 영상 처리 : CT, MRI 등의 의료 영상 데이터를 빠르고 정확하게 처리하여 진단
+  - 자동차 : 자율 주행 차량의 실시간 이미지 및 신호 처리를 통해 안전한 주행 지원
+  - 영상감시 : 실시간 영상 분석을 통해 보안 및 감시 시스펨의 성능을 향상
+  - 통신 : 신호처리 기술을 통해 통신 시스템의 효율성과 신뢰성을 높임
+  - 멀터미디어 : 비디오 스트리밍, 오디오 처리 등에서 고성능 처리를 통해 
+    사용자 경험을 개선한다.
+    (Intel IPP : Intel 프로세서에 최적화된 신호 처리 함수들을 제공,
+     CUDA : GPU를 사용하여 신호 처리 작업을 병렬로 수행할 수있는 플랫폼,
+     MATLAB : 신호 처리 및 분석을 위한 강력한 도구와 라이브러리 제공) 
 
 //CUDA(Compute Unified Device Architecture)
 NVIDIA의 GPU에서 병렬 계산을 수행할 수 있게 해주는 플랫폼.
