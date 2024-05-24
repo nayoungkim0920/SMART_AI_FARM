@@ -1,4 +1,4 @@
-//IPP설정 visual studio 2002
+//IPP설정 visual studio 2022
 w_ipp_oneapi_p_2021.11.0.533_offline.exe
     프로젝트>속성>Intel Libraries for oneAPI>IPP>Default Linking Method
     C/C++>일반>추가포함디렉터리>C:\Program Files %28x86%29\Intel\oneAPI\ipp\2021.11\include
@@ -9,7 +9,7 @@ w_ipp_oneapi_p_2021.11.0.533_offline.exe
     ippsmt.lib
     ippcoremt.lib
 
-//OpenCV설정 visual studio 2002
+//OpenCV설정 visual studio 2022
 https://github.com/opencv/opencv/releases
 opencv-4.9.0-windows.exe
     프로젝트 > 속성 > 모든구성, 활성(x64)
@@ -19,6 +19,9 @@ opencv-4.9.0-windows.exe
     구성을 release 변경 > 링커 > 입력 > 추가 종속성 > 편집 > opencv_world490.lib
     C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490d.dll debug폴더에 복사한다
     C:\opencv\build\x64\vc16\bin으로 들어가서 opencv_world490.dll release폴더에 복사한다
+
+
+//CUDA설정 visual studio 2022
 
 //OpenCV만을 사용하여 그레이스케일로 변환하는 시간: 0.0103371 초
 #include <iostream>
