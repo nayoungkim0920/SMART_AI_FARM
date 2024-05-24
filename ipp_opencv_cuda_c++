@@ -108,5 +108,3 @@ int main() {
     return 0;
 }
 
-//CUDA
-//https://hiuaa.tistory.com/39
