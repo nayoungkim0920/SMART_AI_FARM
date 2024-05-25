@@ -45,3 +45,93 @@ $ cd "C:\myLab\CudaRuntime2"
 $ git init
 Initialized empty Git repository in C:/myLab/CudaRuntime2/.git/
 
+5) 현재 디렉토리에 있는 모든 파일 추가 및 초기 커밋 만들기
+$ git add .
+warning: in the working copy of 'CudaRuntime2/kernel.cu', LF will be replaced by CRLF the next time Git touches it
+$ git commit -m "Initial commit with existing files"
+[main (root-commit) 8bb5929] Initial commit with existing files
+ 71 files changed, 1153 insertions(+)
+ create mode 100644 .vs/CudaRuntime2/FileContentIndex/1165bffa-b53d-46e0-a39f-269590480040.vsidx
+ create mode 100644 .vs/CudaRuntime2/FileContentIndex/2fffce82-6a36-4c70-b1c8-b5072259c273.vsidx
+ create mode 100644 .vs/CudaRuntime2/FileContentIndex/579ad77d-ffc3-4498-b9ad-c7d374c9e77c.vsidx
+ create mode 100644 .vs/CudaRuntime2/FileContentIndex/9dd5535b-6fd6-4cc6-9a08-850183fe193e.vsidx
+ create mode 100644 .vs/CudaRuntime2/FileContentIndex/dfcc03b7-881e-421f-8c56-a0b3890a2bd5.vsidx
+ create mode 100644 .vs/CudaRuntime2/v17/.suo
+ create mode 100644 .vs/CudaRuntime2/v17/Browse.VC.db
+ create mode 100644 .vs/CudaRuntime2/v17/DocumentLayout.json
+ create mode 100644 .vs/CudaRuntime2/v17/Solution.VC.db
+ create mode 100644 .vs/CudaRuntime2/v17/ipch/AutoPCH/1085a006cbc1774e/KERNEL.ipch
+ create mode 100644 .vs/CudaRuntime2/v17/ipch/AutoPCH/32d8024ce8ecce44/GPUACC.ipch
+ create mode 100644 .vs/CudaRuntime2/v17/ipch/AutoPCH/41405e0ba039b987/MAIN.ipch
+ create mode 100644 .vs/CudaRuntime2/v17/ipch/AutoPCH/51d9f4afca621e64/GPUACC.ipch
+ create mode 100644 .vs/CudaRuntime2/v17/ipch/AutoPCH/9b4881f35e084acd/MAIN.ipch
+ create mode 100644 .vs/CudaRuntime2/v17/ipch/AutoPCH/a778421324234fb3/CGPUACC.ipch
+ create mode 100644 .vs/CudaRuntime2/v17/ipch/AutoPCH/d96ad7a73a5e1721/CGPUACC.ipch
+ create mode 100644 CudaRuntime2.sln
+ create mode 100644 CudaRuntime2/CGPUACC.cu
+ create mode 100644 CudaRuntime2/CGPUACC.cuh
+ create mode 100644 CudaRuntime2/CudaRuntime2.vcxproj
+ create mode 100644 CudaRuntime2/CudaRuntime2.vcxproj.filters
+ create mode 100644 CudaRuntime2/CudaRuntime2.vcxproj.user
+ create mode 100644 CudaRuntime2/kernel.cu
+ create mode 100644 CudaRuntime2/main.cpp
+ create mode 100644 CudaRuntime2/x64/Debug/CGPUACC.cu.cache
+ create mode 100644 CudaRuntime2/x64/Debug/CGPUACC.cu.obj
+ create mode 100644 CudaRuntime2/x64/Debug/CGPUACC.cu1361971968.deps
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.Build.CppClean.log
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.exe.recipe
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.ilk
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.log
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.tlog/CL.command.1.tlog
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.tlog/CL.read.1.tlog
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.tlog/CL.write.1.tlog
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.tlog/Cl.items.tlog
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.tlog/CudaCompile.read.1u.tlog
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.tlog/CudaCompile.write.1u.tlog
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.tlog/CudaRuntime2.lastbuildstate
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.tlog/link.command.1.tlog
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.tlog/link.read.1.tlog
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.tlog/link.secondary.1.tlog
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.tlog/link.write.1.tlog
+ create mode 100644 CudaRuntime2/x64/Debug/CudaRuntime2.vcxproj.FileListAbsolute.txt
+ create mode 100644 CudaRuntime2/x64/Debug/GPUACC.cu152528321.deps
+ create mode 100644 CudaRuntime2/x64/Debug/kernel.cu-2089223715.deps
+ create mode 100644 CudaRuntime2/x64/Debug/main.obj
+ create mode 100644 CudaRuntime2/x64/Debug/opencv_world490.dll
+ create mode 100644 CudaRuntime2/x64/Debug/opencv_world490d.dll
+ create mode 100644 CudaRuntime2/x64/Debug/vc143.idb
+ create mode 100644 CudaRuntime2/x64/Debug/vc143.pdb
+ create mode 100644 CudaRuntime2/x64/Debug/vcpkg.applocal.log
+ create mode 100644 CudaRuntime2/x64/Release/CGPUACC.cu.cache
+ create mode 100644 CudaRuntime2/x64/Release/CGPUACC.cu.obj
+ create mode 100644 CudaRuntime2/x64/Release/CGPUACC.cu1361971968.deps
+ create mode 100644 CudaRuntime2/x64/Release/CudaRuntime2.log
+ create mode 100644 CudaRuntime2/x64/Release/CudaRuntime2.tlog/CL.command.1.tlog
+ create mode 100644 CudaRuntime2/x64/Release/CudaRuntime2.tlog/CL.read.1.tlog
+ create mode 100644 CudaRuntime2/x64/Release/CudaRuntime2.tlog/CL.write.1.tlog
+ create mode 100644 CudaRuntime2/x64/Release/CudaRuntime2.tlog/CudaCompile.read.1u.tlog
+ create mode 100644 CudaRuntime2/x64/Release/CudaRuntime2.tlog/CudaCompile.write.1u.tlog
+ create mode 100644 CudaRuntime2/x64/Release/CudaRuntime2.tlog/CudaRuntime2.lastbuildstate
+ create mode 100644 CudaRuntime2/x64/Release/CudaRuntime2.tlog/link.command.1.tlog
+ create mode 100644 CudaRuntime2/x64/Release/CudaRuntime2.tlog/link.read.1.tlog
+ create mode 100644 CudaRuntime2/x64/Release/CudaRuntime2.tlog/link.write.1.tlog
+ create mode 100644 CudaRuntime2/x64/Release/CudaRuntime2.tlog/unsuccessfulbuild
+ create mode 100644 CudaRuntime2/x64/Release/main.obj
+ create mode 100644 CudaRuntime2/x64/Release/opencv_world490.dll
+ create mode 100644 CudaRuntime2/x64/Release/vc143.pdb
+ create mode 100644 x64/Debug/CudaRuntime2.exe
+ create mode 100644 x64/Debug/CudaRuntime2.pdb
+ create mode 100644 x64/Release/opencv_world490.dll
+
+6) 브랜치 생성 및 전환(MyLab브랜치에서 C:\myLab\CudaRuntime2 폴더 버전관리)
+$ git checkout -b MyLab
+Switched to a new branch 'MyLab'
+
+7) 작업내용관리(MyLab브랜치에서 작업을 하고 커밋 추가)
+$ git add .
+$ git commit -m "new Upload!!"
+git commit -m "new Uploadgit add ."
+On branch MyLab
+nothing to commit, working tree clean
+
+8) 원격 저장소 추가
