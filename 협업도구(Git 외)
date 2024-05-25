@@ -1,0 +1,47 @@
+1. Jira (지라)
+Jira는 소프트웨어 개발 및 프로젝트 관리 도구입니다. 
+주로 애자일(Agile) 프로젝트 관리에 사용되며, 
+버그 추적, 이슈 관리, 작업 흐름 제어 등의 기능을 제공합니다. 
+Atlassian이라는 회사에서 개발되었습니다. 
+Jira를 사용하면 프로젝트 팀이 작업을 계획하고, 이슈를 추적하며, 
+성과를 모니터링할 수 있습니다.
+
+2. Confluence (컨플루언스)
+Confluence는 팀 협업을 위한 지식 공유 및 문서화 도구입니다. 
+위키 기반으로 설계되어 있어 팀이 문서를 작성하고, 공유하며, 공동 작업을 할 수 있습니다. 
+Confluence 역시 Atlassian에서 개발되었으며, Jira와 연동하여 프로젝트 관리 및 
+문서화를 더욱 효과적으로 할 수 있습니다. 
+프로젝트 문서, 회의록, 요구 사항 등 다양한 문서를 쉽게 작성하고 관리할 수 있습니다.
+
+3. Git (깃)
+Git은 분산 버전 관리 시스템입니다. 
+소스 코드의 변경 이력을 관리하며, 여러 개발자들이 동시에 작업할 수 있도록 돕습니다. 
+Linus Torvalds가 개발했으며, 오픈 소스 프로젝트에서 널리 사용됩니다. 
+Git은 파일의 변경 사항을 기록하고, 특정 시점으로 되돌아갈 수 있는 기능을 제공하며, 
+브랜치(branch)를 사용하여 독립적인 작업 공간을 만들고 병합(merge)할 수 있습니다. 
+Git을 통해 개발자들은 코드의 버전 관리를 효율적으로 수행할 수 있습니다.
+
+1) 깃 설치 
+https://git-scm.com/ > 2.45.1(2024-05-25) Download > 
+Click here to download the latest (2.45.1) 64-bit version of Git for Windows.
+Git-2.45.1-64-bit.exe
+
+2) 사용자 이름과 이메일 설정(Git Bash)
+<https://github.com/nayoungkim0920>
+nayou@kimnayooung MINGW64 ~ (main)
+$ git config --global user.name "nayoungkim0920"
+nayou@kimnayooung MINGW64 ~ (main)
+$ git config --global user.email "nayoungkim0920@gmail.com"
+nayou@kimnayooung MINGW64 ~ (main)
+$ git config --global --list
+user.name=nayoungkim0920
+user.email=nayoungkim0920@gmail.com
+init.defaultbranch=main
+
+3) 디렉토리로 이동(Git Bash)
+$ cd "C:\myLab\CudaRuntime2"
+
+4) 깃 초기화
+$ git init
+Initialized empty Git repository in C:/myLab/CudaRuntime2/.git/
+
