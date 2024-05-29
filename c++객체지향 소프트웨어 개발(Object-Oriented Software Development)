@@ -1,0 +1,286 @@
+C++ 객체지향 소프트웨어 개발(Object-Oriented Software Development)
+  
+1. 모듈화(Modularity)
+모듈 또는 라이브러리로 나누는 과정을 의미한다.
+#include 지시문과 헤더 파일을 사용하여 구현된다.
+코드를 논리적으로 분리하여 각각의 모듈로 관리하는 것을 의미한다.
+헤더파일과 소스파일을 사용하여 선언과 구현을 분리한다.
+장점 : 코드의 가독성을 향상시키고 유지보수를 용이하게 만든다.
+각 모듈은 독립적으로 개발, 테스트 및 유지보수할 수 있으며, 재사용할 수 있다.
+사례 : 큰 규모의 프로젝트에서 코드를 조직화하고 관리하는것이 일반적이다. 
+여러명의 개발자가 협업할 때 코드의 충돌을 방지하고 각자의 역할에 따라 모듈을 
+할당할 수 있다.
+
+2. 다형성(Polymorphism)
+객체지향 프로그래밍의 핵심 개념 중 하나로, 
+같은 이름의 메서드가 다른 동작을 할 수 있는 능력을 의미한다. 
+가상함수와 상속을 통해 구현된다.
+장점 : 유연하고 확장 가능한 코드를 작성할 수 있다. 
+코드의 재사용성을 높이고, 여러 클래스의 유사한 동작을 일관되게 처리할 수 있다.
+주로 상속과함계 사용되며, 다양한 유형의 객체를 일관된 인터페이스로 처리할 때
+유용하다. 동일한 인터페이스를 갖는 다양한 도형 클래스를 사용하여 그림을 그리는
+프로그램을 만들 수 있다.
+
+3. 객체지향프로그래밍(Object-Oriendted Programming, OOP)
+클래스와 객체, 상속, 다형성, 캡슐화와 같은 객체지향적인 개념을 사용하여 프로그램을
+구현할 수 있다.
+장점 : 코드의 재사용성을 높이고 유지보수를 용이하게 만든다. 
+객체 단위로 코드를 구성함으로써 프로그램의 구조를 더 명확하게 만들고
+복잡한 문제를 해결할 수 있다.
+대규모 프로잭트 및 복잡한 시스템의 개발에 적합하다. GUI 프로그램, 게임 개발,
+웹 애플리케이션 등 다양한 분야에서 사용할 수 있다.
+
+1) 모듈화  
+//Calculator.h
+#ifndef CALCULATOR_H
+#define CALCULATOR_H
+
+class Calculator {
+public:
+	double add(double a, double b);
+	double subtract(double a, double b);
+	double multiply (double a, double b);
+	double divide(double a, double b);
+};
+
+#endif // CALCULATOR_H
+
+//Calculator.cpp
+#include "Calculator.h"
+#include <stdexcept>
+
+double Calculator::add(double a, double b)
+{
+	return a+b;
+}
+
+double Calculator::subtract(double a, double b)
+{
+	return a-b;
+}
+
+double Calculator::multiply(double a, double b)
+{
+	return a*b;
+}
+
+double Calculator::divide(double a, double b)
+{
+	if (b == 0) {
+		throw std::invalid_argument("Division by zero");
+	}
+	return a / b;
+}
+
+//main.cpp
+// ConsoleCalculator.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
+//
+
+#include <iostream>
+#include "Calculator.h" 
+
+int main()
+{
+    Calculator calc;
+
+    double a, b;
+    char op;
+
+    std::cout << "Enter first number : ";
+    std::cin >> a;
+
+    std::cout << "Enter operator (+,-,*,/): ";
+    std::cin >> op;
+
+    std::cout << "Enter second number : ";
+    std::cin >> b;
+
+    try {
+        switch (op) {
+        case '+':
+            std::cout << "Result: " << calc.add(a, b) << std::endl;
+            break;
+        case '-':
+            std::cout << "Result: " << calc.subtract(a, b) << std::endl;
+            break;
+        case '*':
+            std::cout << "Result: " << calc.multiply(a, b) << std::endl;
+            break;
+        case '/':
+            std::cout << "Result: " << calc.divide(a, b) << std::endl;
+            break;
+        default:
+            std::cout << "Invalid operator" << std::endl;
+            break;
+        }
+    }
+    catch (const std::invalid_argument& e) {
+        std::cerr << "Error:" << e.what() << std::endl;
+    }
+
+    return 0;
+}
+
+2) 다형성
+//Operation.h
+#ifndef OPERATION_H
+#define OPERATION_H
+
+class Operation {
+public:
+	//순수 가상 함수 : 인터페이스 정의 및 다형성 지원
+	//해당 함수가 구현되지 않고 파생클래스에서 
+	//반드시 재정의 되어야함을 의미
+	virtual double calculate(double a, double b) = 0;
+};
+
+#endif //OPERATION_H
+
+//AddOperation.h
+#ifndef ADD_OPERATION_H
+#define ADD_OPERATION_H
+
+#include "Operation.h"	
+
+class AddOperation : public Operation {
+public:
+	//상속된 가상함수를 재정의 한다는 것을 명시적으로 나타냄
+	double calculate(double a, double b) override;
+};
+
+#endif // ADD_OPERATION_H
+
+//SubtractOperator.h
+#ifndef SUBTRACT_OPERATION_H
+#define SUBTRACT_OPERATION_H
+
+#include "Operation.h"
+
+class SubtractOperation : public Operation {
+public:
+	double calculate(double a, double b) override;
+};
+
+#endif //SUBTRACT_OPERATION_H
+
+//MultiplyOperation.h
+#ifndef MULTIPLY_OPERATION_H
+#define MULTIPLY_OPERATION_H
+
+#include "Operation.h"
+
+class MultiplyOperation : public Operation {
+public:
+	double calculate(double a, double b) override;
+};
+
+#endif //MULTIPLY_OPERATION_H
+
+//DivideOperation.h
+#ifndef DIVIDE_OPERATION_H
+#define DIVIDE_OPERATION_H
+
+#include "Operation.h"	
+#include <stdexcept>
+
+class DivideOperation : public Operation {
+public:
+	double calculate(double a, double b) override;
+};
+
+#endif //DIVIDE_OPERATION_H
+
+//AddOperation.cpp
+#include "AddOperation.h"
+
+double AddOperation::calculate(double a, double b)
+{
+	return a+b;
+}
+
+//SubtractOperation.cpp
+
+#include "SubtractOperation.h"
+
+double SubtractOperation::calculate(double a, double b)
+{
+    return a-b;
+}
+
+//MultiplyOperation.cpp
+
+#include "MultiplyOperation.h"
+
+double MultiplyOperation::calculate(double a, double b)
+{
+	return a*b;
+}
+
+//DivideOperation.cpp
+
+#include "DivideOperation.h"
+
+double DivideOperation::calculate(double a, double b)
+{
+	if (b == 0) {
+		throw std::invalid_argument("Division by zero");
+	}
+
+	return a/b;
+}
+
+//main.cpp
+#include <iostream>	
+#include <memory>	// std::unique_str
+#include "Operation.h"
+#include "AddOperation.h"
+#include "SubtractOperation.h"
+#include "MultiplyOperation.h"	
+#include "DivideOperation.h"
+
+int main() {
+	double a, b;
+	char op;
+
+	std::cout << "Enter first number : ";
+	std::cin >> a;
+
+	std::cout << "Enter operator(+,-,*,/) : ";
+	std::cin >> op;
+
+	std::cout << "Enter second number : ";
+	std::cin >> b;
+
+	//스택할당,해당 객체의 메서드를 직접 호출
+	//Calculator calc
+	//calc.add(a, b)
+
+	//스마트포인터:동적할당객체관리포인터
+	std::unique_ptr<Operation> operation;
+
+	switch (op) {
+	case '+':
+		operation = std::make_unique<AddOperation>();
+		break;
+	case '-':
+		operation = std::make_unique<SubtractOperation>();
+		break;
+	case '*':
+		operation = std::make_unique<MultiplyOperation>();
+		break;
+	case '/':
+		operation = std::make_unique<DivideOperation>();
+		break;
+	default:
+		std::cout << "Invalid operator" << std::endl;
+		return 1;
+	}try {
+		double result = operation->calculate(a, b);
+		std::cout << "Result: " << result << std::endl;
+	}
+	catch (const std::invalid_argument& e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+	}
+
+	return 0;
+}
