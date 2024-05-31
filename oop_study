@@ -1,0 +1,45 @@
+// Shape.h
+#ifndef SHAPE_H
+#define SHAPE_H
+
+#include <string>
+
+class Shape {
+private:
+	std::string color;
+public:
+	Shape(const std::string& color = "undefined");
+	virtual double area() const = 0; //순수 가상 함수
+	virtual double perimeter() const = 0; //순수 가상 함수
+	virtual std::string name() const = 0; //순수 가상 함수
+	virtual ~Shape(); //가상 소멸자
+
+	void setColor(const std::string& color);
+	std::string getColor() const;
+};
+
+#endif //SAHPE_H
+
+//Shape.cpp
+#include "Shape.h"
+
+Shape::Shape(const std::string& color) : color(color) {}
+
+Shape::~Shape() {}
+
+void Shape::setColor(const std::string& color)
+{
+	this->color = color;
+}
+
+std::string Shape::getColor() const
+{
+	return color;
+}
+
+1. 헤더가드
+(9#ifndef SHAPE_H,#define SHAPE_H,#endif //SAHPE_H)
+헤더파일이 여러 번 포함되는 것을 방지 하기 위해 사용된다.
+컴파일 시간 오류를 방지하고 코드의 안정성을 높인다.
+다중 포함을 방지하여 컴파일 오류를 피하고, 컴파일 시간을 줄이며, 코드의 
+일관성을 유지하기 위해 사용된다.
