@@ -197,3 +197,85 @@ this포인터는 멤버 함수가 호출된 객체의 주소를 가리키는 특
 더 선호한다. 코드의 가독성을 높이고 유지보수성을 향상시키는 데 도움이되며
 코드베이스의 일관성을 유지하는 데 도움이된다.
 -> : 포인터가 가리키는 객체의 멤버에 접근하기 위해 사용된다.
+
+//Circle 추가
+//Circle.h
+
+#ifndef CIRCLE_H
+#define CIRCLE_H
+
+#include "Shape.h"
+
+class Circle : public Shape {
+private:
+	double radius;
+public:
+	Circle(double radius, const std::string& color = "undefined");
+	virtual double area() const override; 
+	virtual double perimeter() const override; 
+	virtual std::string name() const override;
+	virtual ~Circle() override;
+};
+
+#endif //CIRCLE_H
+
+//Circle.cpp
+#include "Circle.h"
+#include <iostream>
+
+const double PI = 3.141592;
+
+Circle::Circle(double radius, const std::string& color)
+	: Shape(color), radius(radius)
+{
+	std::cout << "Circle 생성자" << std::endl;
+}
+
+double Circle::area() const
+{
+	return PI * radius * radius;
+}
+
+double Circle::perimeter() const
+{
+	return 2 * PI * radius;
+}
+
+std::string Circle::name() const
+{
+	return "Circle";
+}
+
+Circle::~Circle()
+{
+	std::cout << "Circle 소멸자" << std::endl;
+}
+
+//main.cpp
+#include "Rectangle.h"
+#include "Circle.h"
+#include <iostream>
+
+int main() {
+	Shape* s[2];
+	s[0] = new Rectangle(3, 5);
+	s[0]->setColor("red");
+	std::cout << s[0]->getColor() << std::endl;
+
+	s[1] = new Circle(2, "yellow");
+	std::cout << s[1]->getColor() << std::endl;
+
+	delete s[0];
+	delete s[1];
+}
+
+Shape 생성자
+Rectangle 생성자
+red
+Shape 생성자
+Circle 생성자
+yellow
+Rectangle 소멸자
+Shape 소멸자
+Circle 소멸자
+Shape 소멸자
