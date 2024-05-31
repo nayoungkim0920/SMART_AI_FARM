@@ -23,9 +23,13 @@ public:
 //Shape.cpp
 #include "Shape.h"
 
-Shape::Shape(const std::string& color) : color(color) {}
+Shape::Shape(const std::string& color) : color(color) {
+	std::cout << "Shape 생성자" << std::endl;
+}
 
-Shape::~Shape() {}
+Shape::~Shape() {
+	std::cout << "Shape 소멸자" << std::endl;
+}
 
 void Shape::setColor(const std::string& color)
 {
@@ -36,6 +40,24 @@ std::string Shape::getColor() const
 {
 	return color;
 }
+
+//main.cpp
+#include "Shape.h"
+#include "Rectangle.h"
+#include <iostream>
+
+int main() {
+	Shape* s = new Rectangle(3, 5);
+	s->setColor("red");
+	std::cout << s->getColor() << std::endl;
+	delete s;
+}
+
+Shape 생성자
+Rectangle 생성자
+red
+Rectangle 소멸자
+Shape 소멸자
 
 1. Shape.h
 1) 헤더가드
@@ -112,3 +134,36 @@ std::string getColor() const{
 안전하게 접근할 수 있도록 한다.
 -유지보수성 : 멤버 변수를 변경할 때마다 다른 코드를 수정할 필요 없이, 
 해당 함수만 수정하면 되므로 유지보수가 용이하다.
+
+2. Shape.cpp
+1) 헤더파일포함
+#include "Shape.h"
+Shape클래스의 선언이 포함되어 있다. 이 파일을 포함함으로써 Shape 클래스의 
+정의와 멤버 함수 선언을 사용할 수 있다.
+
+2)생성자 구현
+Shape::Shape(const std::string& color) : color(color) {
+	std::cout << "Shape 생성자" << std::endl;
+}
+도형의 초기색상을 설정한다. 생성자가 호출될 때 멤버 변수를 초기화하는 
+효율적인 방법이다.
+
+3)소멸자 구현
+Shape::~Shape(){
+	std::cout << "Shape 소멸자" << std::endl;
+}
+Shape클래스의 가상 소멸자이다. 파생클래스의 소멸자가 올바르게 호출되도록
+보장한다. 이 소멸자는 Shape 객체가 소멸될 때 호출된다.
+
+4)색상설정함수구현
+void Shape::setColor(const std::string& color){
+	this->color = color;
+}
+private멤버변수인 color변수를 설정한다. 매개변수로 받은 color값을 
+this포인터를 사용하여 현재 객체의 color 멤버 변수에 할당한다. 
+this포인터는 멤버 함수가 호출된 객체의 주소를 가리키는 특별한 포인터로
+이를 통해 멤버 변수와 매개변수의 이름이 동일하더라도 구별할 수 있다.
+하지만, 변수명을 겹치지않게하고 this를 사용하여 명확히 구분하는 방식을 
+더 선호한다. 코드의 가독성을 높이고 유지보수성을 향상시키는 데 도움이되며
+코드베이스의 일관성을 유지하는 데 도움이된다.
+-> : 포인터가 가리키는 객체의 멤버에 접근하기 위해 사용된다.
