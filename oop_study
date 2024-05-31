@@ -1,3 +1,34 @@
+//클래스 다이아그램
++-----------------------------------+
+|               Shape               |
++-----------------------------------+
+| - color: std::string              |
++-----------------------------------+
+| + Shape(color: std::string = "undefined") |
+| + virtual area(): double          |
+| + virtual perimeter(): double     |
+| + virtual name(): std::string     |
+| + setColor(color: std::string)   |
+| + getColor(): std::string         |
++-----------------------------------+
+            /\
+            |
+            |
+            |
+            |
+            |
++-----------------------------------+
+|            Rectangle              |
++-----------------------------------+
+| - width: double                   |
+| - height: double                  |
++-----------------------------------+
+| + Rectangle(width: double, height: double, color: std::string = "undefined") |
+| + area(): double override         |
+| + perimeter(): double override    |
+| + name(): std::string override    |
++-----------------------------------+
+
 // Shape.h
 #ifndef SHAPE_H
 #define SHAPE_H
