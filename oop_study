@@ -199,6 +199,53 @@ this포인터는 멤버 함수가 호출된 객체의 주소를 가리키는 특
 -> : 포인터가 가리키는 객체의 멤버에 접근하기 위해 사용된다.
 
 //Circle 추가
++-----------------------------------+
+|               Shape               |
++-----------------------------------+
+| - color: std::string              |
++-----------------------------------+
+| + Shape(color: std::string = "undefined") |
+| + virtual area(): double          |
+| + virtual perimeter(): double     |
+| + virtual name(): std::string     |
+| + setColor(color: std::string)   |
+| + getColor(): std::string         |
++-----------------------------------+
+            /\
+            |
+            |
+            |
+            |
+            |
++-----------------------------------+
+|            Rectangle              |
++-----------------------------------+
+| - width: double                   |
+| - height: double                  |
++-----------------------------------+
+| + Rectangle(width: double, height: double, color: std::string = "undefined") |
+| + area(): double override         |
+| + perimeter(): double override    |
+| + name(): std::string override    |
++-----------------------------------+
+            /\
+            |
+            |
+            |
+            |
+            |
++-----------------------------------+
+|              Circle               |
++-----------------------------------+
+| - radius: double                  |
++-----------------------------------+
+| + Circle(radius: double, color: std::string = "undefined") |
+| + area(): double override         |
+| + perimeter(): double override    |
+| + name(): std::string override    |
++-----------------------------------+
+
+
 //Circle.h
 
 #ifndef CIRCLE_H
