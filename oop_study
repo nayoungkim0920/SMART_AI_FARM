@@ -331,3 +331,33 @@ Shape 소멸자
 Circle::Circle(double radius, const std::string& color)
 	: Shape(color), radius(radius)
 생성자 몸체에 진입 하기 전에 멤버 변수가 초기화되므로 효율적이다.
+
+//순수가상함수
+1)베이스 클래스 - Shapde.h
+virtual std::string name() const = 0;
+2)파생클래스(순수가상함수오버라이드) - Rectangle.h
+virtual std::string name() const override;
+3)파생 클래스 - Square.h
+std::string name();
+순수가상함수를 한번더 상속받는 경우에는 해당 함수를 다시 선언할 필요가없다.
+이미 베이스클래스에서 순수가상함수로 선언되었기 때문에 파생클래스에서
+다시 선언할 필요가 없다. 파생클래스가 이미 해당 함수를 오버라이딩해야하기
+때문이다. 
+
+//생성자
+-Shape.h
+Shape(const std::string& color = "undefined");
+-Shape.cpp
+Shape::Shape(const std::string& color) : color(color){}
+
+-Rectangle.h
+Rectangle(double w, double h, const std::string& color="undefined");
+-Rectangle.cpp
+Rectangle::Rectangle(double w, double h, const std::string& color) 
+	:Shape(color), width(w), height(h) {}
+
+-Square.h
+Square(double side, const std::string& color = "undefined");
+-Square.cpp
+Square::Square(double side, const std::string& color)
+	: Rectangle(side, side, color){}
