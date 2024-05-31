@@ -86,6 +86,19 @@ virtual ~Shape()
 메모리 누수를 방지하고 자원을 올바르게 해제할 수 있다.
 추상클래스의 소멸자가 호출되면 파생클래스의 소멸자도 호출된다.
 
+#include "Shape.h"
+#include "Rectangle.h"
+
+int main() {
+	Shape* s = new Rectangle(3, 5);
+	delete s;
+}
+
+Shape 생성자
+Rectangle 생성자
+Rectangle 소멸자
+Shape 소멸자
+
 6) 색상 설정 및 반환 함수
 void setColor(const std::string& color){
 	this->color = color;
