@@ -42,7 +42,6 @@ std::string Shape::getColor() const
 }
 
 //main.cpp
-#include "Shape.h"
 #include "Rectangle.h"
 #include <iostream>
 
