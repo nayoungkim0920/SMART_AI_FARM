@@ -37,9 +37,65 @@ std::string Shape::getColor() const
 	return color;
 }
 
-1. 헤더가드
-(9#ifndef SHAPE_H,#define SHAPE_H,#endif //SAHPE_H)
+1. Shape.h
+1) 헤더가드
+#ifndef SHAPE_H,#define SHAPE_H,#endif //SAHPE_H
 헤더파일이 여러 번 포함되는 것을 방지 하기 위해 사용된다.
 컴파일 시간 오류를 방지하고 코드의 안정성을 높인다.
 다중 포함을 방지하여 컴파일 오류를 피하고, 컴파일 시간을 줄이며, 코드의 
 일관성을 유지하기 위해 사용된다.
+
+2) 색상속성
+private:
+    std::string color;
+도형의 색상을 나타내는 color 멤버 변수를 private로 선언하여 
+직접 접근을 막고, 대신 public 멤버 함수를 통해 접근한다.
+정보 은닉(Information Hiding)을 통해 데이터 무결성을 유지하고,
+클래스의 인터페이스와 구현을 분리하여 유지보수성과 확장성을 높인다.
+
+3) 생성자
+public":
+Sahpe(const std::string& color = "undefined") : color(color);
+생성자는 객체가 생성될 때 호출되며, 기본적으로 색상을 undefined로 설정.
+기본 값을 제공함으로써 객체 생성 시 불필요한 초기화 코드를 줄이고
+사용 편의성을 높인다.
+상수참조(const std::string&)는 매개변수를 상수 참조로 받는다.
+-복사방지 : 문자열을 값으로 전달하면 복사가 일어난다. 복사는 시간과 메모리
+측면에서 비효율적일 수 있다. 참조를 사용하면 이러한 복사를 피할 수 있다.
+-불변성 : const 키워드를 사용하면 함수 내부에서 매개변수를 수정할 수 없게
+되어 원본 데이터가 변경되지 않음을 보장한다.
+
+4) 순수가상함수
+virtual doble area() const = 0;
+virtual double perimeter() const = 0;
+virtual str::string name() const = 0;
+Shape 클래스가 추상 클래스가 되게 하며, 상속받는 파생 클래스가 반드시
+이 함수들을 구현하도록 강제한다.
+-다형성(Polymorphism) : 순수 가상 함수를 사용하여, 동일한 인터페이스를 통해
+다양한 도형 객체를 일관되게 처리할 수 있다.
+-확장성 : 새로운 도형 클래스를 추가할 때, Shape클래스를 상속받아 필요한 함수
+들을 구현하기만 하면 되므로, 기존 코드를 수정할 필요 없이 기능을 확장할 수
+있다.
+-유연성 : 프로그램이 구체적인 도형 클래스에 의존하지 않도록 하여, 변경에
+유연하게 대응할 수 있다.
+
+5) 가상 소멸자
+virtual ~Shape()
+파생 클래스와 객체가 올바르게 소멸되도록 보장한다.
+기본 클래스 포인터로 파생 클래스 객체를 삭제할 때, 올바른 소멸자가 호출되어
+메모리 누수를 방지하고 자원을 올바르게 해제할 수 있다.
+추상클래스의 소멸자가 호출되면 파생클래스의 소멸자도 호출된다.
+
+6) 색상 설정 및 반환 함수
+void setColor(const std::string& color){
+	this->color = color;
+}
+
+std::string getColor() const{
+	return color;
+}
+
+-캡슐화(Capsulation) : 멤버 변수에 직접 접근하는 것을 막고, 함수를 통해
+안전하게 접근할 수 있도록 한다.
+-유지보수성 : 멤버 변수를 변경할 때마다 다른 코드를 수정할 필요 없이, 
+해당 함수만 수정하면 되므로 유지보수가 용이하다.
