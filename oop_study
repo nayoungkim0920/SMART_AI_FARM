@@ -326,3 +326,8 @@ Rectangle 소멸자
 Shape 소멸자
 Circle 소멸자
 Shape 소멸자
+
+1) 생성자
+Circle::Circle(double radius, const std::string& color)
+	: Shape(color), radius(radius)
+생성자 몸체에 진입 하기 전에 멤버 변수가 초기화되므로 효율적이다.
