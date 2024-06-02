@@ -548,3 +548,134 @@ void createShape(){
 }
 -명확한 코드
 자원의 소유권과 수명을 명확하게 나타낼 수 있다. 코드의 가독성과 유지 보수성을 높인다.
+
+//도형과 부가정보를 입력받고 출력하기
+//ShapeManager.h
+#ifndef SHAPESMANAGER_H
+#define SHAPESMANAGER_H
+
+#include <vector>
+#include <memory>
+#include "Shape.h"
+
+class ShapeManager {
+public:
+	void addShape();
+	void printShape() const; //해당 함수가 객체의 상태를 변경하지 않음을 보장
+
+private:
+	std::vector<std::unique_ptr<Shape>> shapes;
+};
+
+#endif //SHAPESMANAGER_H
+
+//ShapeManager.cpp
+#include "ShapesManager.h"
+#include "Rectangle.h"
+#include "Circle.h"
+#include "Triangle.h"
+#include <iostream>
+
+void ShapeManager::addShape()
+{
+    int choice;
+    while (true) {
+        std::cout << "도형을 추가하세요 (1: Rectangle, 2: Circle, 3: Triangle, 0: 종료): ";
+        std::cin >> choice;
+        if (choice == 0) break;
+
+        switch (choice) {
+        case 1: {
+            double width, height;
+            std::string color;
+            std::cout << "Rectangle의 너비, 높이, 색상 입력: ";
+            std::cin >> width >> height >> color;
+            auto rect = std::make_unique<Rectangle>(width, height, color);
+            shapes.push_back(std::move(rect));
+            std::cout << "Rectangle이 추가되었습니다." << std::endl;
+            break;
+        }
+        case 2: {
+            double radius;
+            std::string color;
+            std::cout << "Circle의 반지름, 색상 입력: ";
+            std::cin >> radius >> color;
+            auto circle = std::make_unique<Circle>(radius, color);
+            shapes.push_back(std::move(circle));
+            std::cout << "Circle이 추가되었습니다." << std::endl;
+            break;
+        }
+        case 3: {
+            double base, height, side1, side2, side3;
+            std::string color;
+            std::cout << "Triangle의 밑변, 높이, 세 변의 길이, 색상 입력: ";
+            std::cin >> base >> height >> side1 >> side2 >> side3 >> std::ws; // std::ws를 사용하여 입력 버퍼를 비웁니다.
+            std::getline(std::cin, color); // 개행 문자를 무시하고 나머지 입력을 받습니다.
+            auto triangle = std::make_unique<Triangle>(base, height, side1, side2, side3, color);
+            shapes.push_back(std::move(triangle));
+            std::cout << "Triangle이 추가되었습니다." << std::endl;
+            break;
+        }
+
+        default:
+            std::cout << "잘못된 입력입니다. 다시 시도하세요." << std::endl;
+            break;
+        }
+    }
+}
+
+
+void ShapeManager::printShape() const
+{
+	for (const auto& shape : shapes) {
+		std::cout << shape->name() << "의 색상: " << shape->getColor() << std::endl;
+		std::cout << shape->name() << "의 면적: " << shape->area() << std::endl;
+		std::cout << shape->name() << "의 둘레: " << shape->perimeter() << std::endl;
+	}
+}
+
+//main.cpp
+#include "ShapesManager.h"
+
+int main() {
+
+	ShapeManager manager;
+
+	manager.addShape();
+	manager.printShape();
+
+	return 0;
+}
+
+//출력
+도형을 추가하세요 (1: Rectangle, 2: Circle, 3: Triangle, 0: 종료): 1
+Rectangle의 너비, 높이, 색상 입력: 3 5 RED
+Shape 생성자
+Rectangle생성자
+Rectangle이 추가되었습니다.
+도형을 추가하세요 (1: Rectangle, 2: Circle, 3: Triangle, 0: 종료): 2
+Circle의 반지름, 색상 입력: 2 GREEN
+Shape 생성자
+Circle 생성자
+Circle이 추가되었습니다.
+도형을 추가하세요 (1: Rectangle, 2: Circle, 3: Triangle, 0: 종료): 3
+Triangle의 밑변, 높이, 세 변의 길이, 색상 입력: 1 2 3 4 5 YELLOW
+Shape 생성자
+Triangle 생성자
+Triangle이 추가되었습니다.
+도형을 추가하세요 (1: Rectangle, 2: Circle, 3: Triangle, 0: 종료): 0
+Rectangle의 색상: RED
+Rectangle의 면적: 15
+Rectangle의 둘레: 16
+Circle의 색상: GREEN
+Circle의 면적: 12.5664
+Circle의 둘레: 12.5664
+Triangle의 색상: YELLOW
+Triangle의 면적: 1
+Triangle의 둘레: 12
+Rectangle소멸자
+Shape 소멸자
+Circle 소멸자
+Shape 소멸자
+Triangle 소멸자
+Shape 소멸자
