@@ -702,3 +702,303 @@ std::unique_ptr은 동적으로 할당된 객체에 대한 포인터를 가지�
 4)Move 시멘틱스를 활용
 std::uhique_ptr은 포인터가 유일한 소유권을 가지기 때문에 이동 시맨틱스를 지원한다.
 따라서 객체를 복사하는 대신 이동하여 성능을 향상 시킬 수 있다.
+
+
+//virtual ~Shape() = default;
+가상 소멸자(virtual destructor)를 정의
+virtual 키워드는 이 소멸자가 파생 클래스에서 오버라이딩할 수 있음을 나타냄
+=default는 이 소멸자가 기본적인 동작을 갖도록 하겠다는것을 의미
+상속 관계에서 객체가 파괴될 때 올바른 소멸자가 호출되도록 보장
+컴파일러에게 해당 멤버 함수가 디폴트로 생성되도록 요청하는 것
+해당 함수가 사용될 때까지 컴파일러가 정확히 어떻게 작동해야하는지 알 수 없을때 유용
+
+// Shape.h
+#ifndef SHAPE_H
+#define SHAPE_H
+
+#include <string>
+
+class Shape {
+public:
+	virtual ~Shape() = default; //기본동작을함을알수있다.
+
+	virtual double area() const = 0;
+	virtual double perimeter() const = 0;
+	virtual std::string name() const = 0;
+	virtual std::string getColor() const = 0;
+	virtual void setColor(const std::string& color) = 0;
+};
+
+#endif //SAHPE_H
+
+//Rectangle.h
+#ifndef RECTANGLE_H
+#define RECTANGLE_H
+
+#include "Shape.h"
+
+//사각형 클래스9도형 클래스를 상속
+class Rectangle : public Shape {
+public:
+	Rectangle(double width, double height, const std::string& color);
+	~Rectangle() override = default;
+
+	double area() const override;
+	double perimeter() const override;
+	std::string name() const override;
+	std::string getColor() const override;
+	void setColor(const std::string& color) override;
+
+private:
+	double width_;
+	double height_;
+	std::string color_;
+};
+
+#endif //RECTANGLE_H
+
+//Rectangle.cpp
+#include "Rectangle.h"
+
+Rectangle::Rectangle(double width, double height, const std::string& color)
+	: width_(width), height_(height), color_(color) {}
+
+double Rectangle::area() const
+{
+	return width_ * height_;
+}
+
+double Rectangle::perimeter() const
+{
+	return 2 * (width_ + height_);
+}
+
+std::string Rectangle::name() const
+{
+	return "Rectangle";
+}
+
+std::string Rectangle::getColor() const
+{
+	return color_;
+}
+
+void Rectangle::setColor(const std::string& color)
+{
+	color_ = color;
+}
+
+//Circle.h
+#ifndef CIRCLE_H
+#define CIRCLE_H
+
+#define M_PI 3.14159265358979323846
+
+#include "Shape.h"
+
+class Circle : public Shape {
+public:
+	Circle(double radius, const std::string& color);
+	~Circle() override = default; //기본동작을함을알수있다.
+
+	double area() const override;
+	double perimeter() const override;
+	std::string name() const override;
+	std::string getColor() const override;
+	void setColor(const std::string& color) override;
+
+private:
+	double radius_;
+	std::string color_;
+};
+
+#endif //CIRCLE_H
+
+//Circle.cpp
+#include "Circle.h"
+
+Circle::Circle(double radius, const std::string& color)
+	: radius_(radius), color_(color) {}
+
+double Circle::area() const
+{
+	return M_PI * radius_ * radius_;
+}
+
+double Circle::perimeter() const
+{
+	return 2 * M_PI * radius_;
+}
+
+std::string Circle::name() const
+{
+	return "Circle";
+}
+
+std::string Circle::getColor() const
+{
+	return color_;
+}
+
+void Circle::setColor(const std::string& color)
+{
+	color_ = color;
+}
+
+//Triangle.h
+#ifndef TRIANGLE_H
+#define TRIANGLE_H
+
+#include "Shape.h"
+
+class Triangle : public Shape {
+public:
+	Triangle(double base, double height, double side1, double side2, double side3, const std::string& color);
+	~Triangle() override = default; //기본동작을함을알수있다.
+
+	double area() const override;
+	double perimeter() const override;
+	std::string name() const override;
+	std::string getColor() const override;
+	void setColor(const std::string& color) override;
+private:
+	double base_;
+	double height_;
+	double side1_;
+	double side2_;
+	double side3_;
+	std::string color_;
+};
+
+#endif //TRIANGLE_H
+
+//Triangle.cpp
+
+#include "Triangle.h"
+
+Triangle::Triangle(double base, double height, double side1, double side2, double side3, const std::string& color)
+	: base_(base), height_(height), side1_(side1), side2_(side2), side3_(side3), color_(color) {}
+
+double Triangle::area() const
+{
+	//삼각형 넓이(헤론의공식)
+	double s = (side1_ + side2_ + side3_) / 2.0;
+	return sqrt(s * (s - side1_) *(s-side2_)*(s-side3_));
+}
+
+double Triangle::perimeter() const
+{
+	return side1_ + side2_ + side3_;
+}
+
+std::string Triangle::name() const
+{
+	return "Triangle";
+}
+
+std::string Triangle::getColor() const
+{
+	return color_;
+}
+
+void Triangle::setColor(const std::string& color)
+{
+	color_ = color;
+}
+
+//ShapeManager.h
+#ifndef SHAPESMANAGER_H
+#define SHAPESMANAGER_H
+
+#include <vector>
+#include <memory>
+#include "Shape.h"
+
+class ShapeManager {
+public:
+	void addShape();
+	void printShape() const; //해당 함수가 객체의 상태를 변경하지 않음을 보장
+
+private:
+	std::vector<std::unique_ptr<Shape>> shapes;
+};
+
+#endif //SHAPESMANAGER_H
+
+//ShapeManager.cpp
+#include "ShapesManager.h"
+#include "Rectangle.h"
+#include "Circle.h"
+#include "Triangle.h"
+#include <iostream>
+
+void ShapeManager::addShape()
+{
+    int choice;
+    while (true) {
+        std::cout << "도형을 추가하세요 (1: Rectangle, 2: Circle, 3: Triangle, 0: 종료): ";
+        std::cin >> choice;
+        if (choice == 0) break;
+
+        switch (choice) {
+        case 1: {
+            double width, height;
+            std::string color;
+            std::cout << "Rectangle의 너비, 높이, 색상 입력: ";
+            std::cin >> width >> height >> color;
+            auto rect = std::make_unique<Rectangle>(width, height, color);
+            shapes.push_back(std::move(rect));
+            std::cout << "Rectangle이 추가되었습니다." << std::endl;
+            break;
+        }
+        case 2: {
+            double radius;
+            std::string color;
+            std::cout << "Circle의 반지름, 색상 입력: ";
+            std::cin >> radius >> color;
+            auto circle = std::make_unique<Circle>(radius, color);
+            shapes.push_back(std::move(circle));
+            std::cout << "Circle이 추가되었습니다." << std::endl;
+            break;
+        }
+        case 3: {
+            double base, height, side1, side2, side3;
+            std::string color;
+            std::cout << "Triangle의 밑변, 높이, 세 변의 길이, 색상 입력: ";
+            std::cin >> base >> height >> side1 >> side2 >> side3 >> std::ws; // std::ws를 사용하여 입력 버퍼를 비웁니다.
+            std::getline(std::cin, color); // 개행 문자를 무시하고 나머지 입력을 받습니다.
+            auto triangle = std::make_unique<Triangle>(base, height, side1, side2, side3, color);
+            shapes.push_back(std::move(triangle));
+            std::cout << "Triangle이 추가되었습니다." << std::endl;
+            break;
+        }
+
+        default:
+            std::cout << "잘못된 입력입니다. 다시 시도하세요." << std::endl;
+            break;
+        }
+    }
+}
+
+
+void ShapeManager::printShape() const
+{
+	for (const auto& shape : shapes) {
+		std::cout << shape->name() << "의 색상: " << shape->getColor() << std::endl;
+		std::cout << shape->name() << "의 면적: " << shape->area() << std::endl;
+		std::cout << shape->name() << "의 둘레: " << shape->perimeter() << std::endl;
+	}
+}
+
+//main.cpp
+#include "ShapesManager.h"
+
+int main() {
+
+	ShapeManager manager;
+
+	manager.addShape();
+	manager.printShape();
+
+	return 0;
+}
