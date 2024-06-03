@@ -1227,3 +1227,80 @@ Polygon의 둘레: 20.00
 1:도형추가, 2:도형출력, 3:도형삭제, 0:종료:2
 추가된 도형이 없습니다.
 1:도형추가, 2:도형출력, 3:도형삭제, 0:종료:0
++-----------------------+
+|      <<interface>>    |
+|         Shape         |
++-----------------------+
+| - color: string       |
++-----------------------+
+| + virtual area(): double |
+| + virtual perimeter(): double |
+| + virtual name(): string |
+| + virtual getColor(): string |
+| + virtual setColor(color: string): void |
++-----------------------+
+            |
+            | implements
+            |
++------------------------+
+|        Rectangle       |
++------------------------+
+| - width: double        |
+| - height: double       |
++------------------------+
+| + Rectangle(width: double, height: double, color: string) |
+| + area(): double |
+| + perimeter(): double |
+| + name(): string |
+| + getColor(): string |
+| + setColor(color: string): void |
++------------------------+
+            |
+            | extends
+            |
++------------------------+
+|         Circle         |
++------------------------+
+| - radius: double       |
++------------------------+
+| + Circle(radius: double, color: string) |
+| + area(): double |
+| + perimeter(): double |
+| + name(): string |
+| + getColor(): string |
+| + setColor(color: string): void |
++------------------------+
+            |
+            | extends
+            |
++------------------------+
+|        Triangle        |
++------------------------+
+| - base: double         |
+| - height: double       |
+| - side1: double        |
+| - side2: double        |
+| - side3: double        |
++------------------------+
+| + Triangle(base: double, height: double, side1: double, side2: double, side3: double, color: string) |
+| + area(): double |
+| + perimeter(): double |
+| + name(): string |
+| + getColor(): string |
+| + setColor(color: string): void |
++------------------------+
+            |
+            | extends
+            |
++------------------------+
+|         Polygon         |
++------------------------+
+| - sides: vector<double> |
++------------------------+
+| + Polygon(sides: vector<double>, color: string) |
+| + area(): double |
+| + perimeter(): double |
+| + name(): string |
+| + getColor(): string |
+| + setColor(color: string): void |
++------------------------+
