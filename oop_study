@@ -1004,8 +1004,10 @@ int main() {
 }
 
 
-//다각형 추가
-//1. Polygon 클래스 추가
+//다각형 추가, 도형삭제기능 추가
+//1. Polygon.h, Polygon.cpp 추가
+//2. ShapeManager.h, ShapeManager.cpp 변경/추가
+
 //Polygon.h
 #ifndef POLYGON_H
 #define POLYGON_H
@@ -1205,3 +1207,23 @@ void ShapeManager::removeShape()
         std::cout << "잘못된 인덱스입니다." << std::endl;
     }
 }
+
+//결과
+1:도형추가, 2:도형출력, 3:도형삭제, 0:종료:1
+도형을 추가하세요 (1: Rectangle, 2: Circle, 3: Triangle, 4:Polygon 0: 종료): 4
+Polygon의 변의 개수 입력: 4
+Polygon의 각 변의 길이와 색상 입력: 5.0 5.0 5.0 5.0
+red
+Polygon이 추가되었습니다.
+도형을 추가하세요 (1: Rectangle, 2: Circle, 3: Triangle, 4:Polygon 0: 종료): 0
+1:도형추가, 2:도형출력, 3:도형삭제, 0:종료:2
+추가된 도형 정보:
+Polygon의 색상: red
+Polygon의 면적: 25.00
+Polygon의 둘레: 20.00
+1:도형추가, 2:도형출력, 3:도형삭제, 0:종료:3
+삭제할 도형의 인덱스 입력: 0
+도형이 삭제되었습니다.
+1:도형추가, 2:도형출력, 3:도형삭제, 0:종료:2
+추가된 도형이 없습니다.
+1:도형추가, 2:도형출력, 3:도형삭제, 0:종료:0
