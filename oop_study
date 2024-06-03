@@ -1323,6 +1323,8 @@ shapes벡터에 접근하도록 보장한다.
 뮤텍스를 사용하면 임계 영역(critical section)에 진입하는 코드 블록을 동기화할 
 수 있다. 이것은 원자성을 보장하여 여러 스레드가 동시에 동일한 리소스에 접근할
 때 예기치 않은 동작을 방지한다.
+4. Race Condition 방지
+여러 쓰레드가 동시에 수정하는 것을 방
 
 //ShapeManager.h
 #ifndef SHAPESMANAGER_H
@@ -1476,7 +1478,7 @@ void ShapeManager::removeShape()
     std::cin >> index;
 
     {
-        std::lock_guard<std::mutex>lock(mutex);
+        std::lock_guard<std::mutex>lock(mutex); //가장간단한형태의 락
 
         if (index >= 0 && index < shapes.size()) {
             shapes.erase(shapes.begin() + index);
@@ -1487,3 +1489,203 @@ void ShapeManager::removeShape()
         }
     }
 }
+
+//더 높은 수준의 동시성 제어 std::shared_mutex 사용한 읽기-쓰기 잠금 구현
+//여러 스레드가 동시에 printShape()를 호출하여 읽기 작업을 수행할 수 있으면서,
+addShape() 또는 removeShape()와 같은 쓰기 작업이 진행될 때는 읽기 작업이 차단
+되어 데이터 일관성을 유지할 수 있다.
+
+//락을 관리하기 위한 클래스
+1. std::mutex
+가장 기본적인 락 클래스, 상호배제(mutual exclusion)를 제공한다. 
+하나의 스레드만이 락을 소유할 수 있다.
+
+2.std::lock_guard
+가장 간단한 형태의 락 클래스이다. 
+생성될 때 락을 획득하고 소멸될 때 자동으로 락을 해제한다. 
+한번락이 걸리면 해당 스코프를 벗어나기 전까지 락이 유지된다. 
+단일 스레드가 락을 소유하고 해제하는 간단한 락을 구현할 때 사용
+
+3.std::unique_lock
+std::lock_guard보다 더 유연한 락 클래스이다.
+락은 언제든지 해제하고 재획득할 수 있다.
+락을 해제하고 다시 획득하는 등의 작업이 필요한 경우 유용하다.
+
+4.std::shared_lock
+여러 스레드가 공유하는 리스소에 대한 읽기 전용 락을 관리하는 클래스이다.
+여러 스레드가 동시에 읽기 작업을 수행할 수 있다.
+std::shared_mutex의 락을 관리 하는데 사용된다. 
+여러 스레드가 동시에 읽기 작업을 수행할 수 있도록 해준다.
+
+//std::shared_lock 사용하여 자원공유하기
+//ShapeManager.h
+#ifndef SHAPESMANAGER_H
+#define SHAPESMANAGER_H
+
+#include <vector>
+#include <memory>
+#include <shared_mutex>
+#include <iostream>
+#include <iomanip>
+#include "Shape.h"
+
+class ShapeManager {
+public:
+	void addShape(); //도형추가
+	void printShape() const; //해당 함수가 객체의 상태를 변경하지 않음을 보장
+	void removeShape(); //도형삭제
+private:
+	std::vector<std::unique_ptr<Shape>> shapes;
+	//mutable std::mutex mutex; //뮤텍스
+	mutable std::shared_mutex mutex;
+};
+
+#endif //SHAPESMANAGER_H
+
+//ShapeManager.cpp
+#include "ShapesManager.h"
+#include "Rectangle.h"
+#include "Circle.h"
+#include "Triangle.h"
+#include "Polygon.h"
+
+void ShapeManager::addShape()
+{
+    int choice;
+    while (true) {
+        std::cout << "도형을 추가하세요 (1: Rectangle, 2: Circle, 3: Triangle, 4:Polygon 0: 종료): ";
+        std::cin >> choice;
+        if (choice == 0) break;
+
+        switch (choice) {
+        case 1: {
+            double width, height;
+            std::string color;
+            std::cout << "Rectangle의 너비, 높이, 색상 입력: ";
+            std::cin >> width >> height >> color;
+            //auto rect = std::make_unique<Rectangle>(width, height, color);
+            //shapes.push_back(std::move(rect));
+            std::unique_ptr<Shape> rect = std::make_unique<Rectangle>(width, height, color);
+            {
+                //std::lock_guard<std::shared_mutex> lock(mutex);
+                std::shared_lock<std::shared_mutex> lock(mutex);
+                shapes.push_back(std::move(rect));
+            }
+            std::cout << "Rectangle이 추가되었습니다." << std::endl;
+            break;
+        }
+        case 2: {
+            double radius;
+            std::string color;
+            std::cout << "Circle의 반지름, 색상 입력: ";
+            std::cin >> radius >> color;
+            //auto circle = std::make_unique<Circle>(radius, color);
+            //shapes.push_back(std::move(circle));
+            std::unique_ptr<Shape> circle = std::make_unique<Circle>(radius, color);
+            {
+                //std::lock_guard<std::mutex>lock(mutex);
+                std::shared_lock<std::shared_mutex> lock(mutex);
+                shapes.push_back(std::move(circle));
+            }            
+            std::cout << "Circle이 추가되었습니다." << std::endl;
+            break;
+        }
+        case 3: {
+            double base, height, side1, side2, side3;
+            std::string color;
+            std::cout << "Triangle의 밑변, 높이, 세 변의 길이, 색상 입력: ";
+            std::cin >> base >> height >> side1 >> side2 >> side3 >> std::ws; // std::ws를 사용하여 입력 버퍼를 비웁니다.
+            std::getline(std::cin, color); // 개행 문자를 무시하고 나머지 입력을 받습니다.
+            //auto triangle = std::make_unique<Triangle>(base, height, side1, side2, side3, color);
+            //shapes.push_back(std::move(triangle));
+            std::unique_ptr<Shape> triangle = std::make_unique<Triangle>(base, height, side1, side2, side3, color);
+            {
+                //std::lock_guard<std::mutex>lock(mutex);
+                std::shared_lock<std::shared_mutex> lock(mutex);
+                shapes.push_back(std::move(triangle));
+            }
+            std::cout << "Triangle이 추가되었습니다." << std::endl;
+            break;
+        }
+        case 4: {
+            int n;
+            std::cout << "Polygon의 변의 개수 입력: ";
+            while (!(std::cin >> n) || n < 3) { // n이 유효한 값인지 확인
+                std::cout << "유효한 변의 개수를 입력하십시오 (3 이상의 정수): ";
+                std::cin.clear(); // 입력 스트림의 오류 상태를 지움
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 버퍼를 비움
+            }
+            std::vector<double> sides(n);
+            std::string color;
+            std::cout << "Polygon의 각 변의 길이와 색상 입력: ";
+            for (int i = 0; i < n; ++i) {
+                while (!(std::cin >> sides[i])) { // 각 변의 길이가 유효한 값인지 확인
+                    std::cout << "유효한 변의 길이를 입력하십시오: ";
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+            }
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 남아있는 '\n'를 무시
+            std::getline(std::cin, color); // 색상을 입력받음
+
+            //auto polygon = std::make_unique<Polygon>(sides, color);
+            //shapes.push_back(std::move(polygon));
+            std::unique_ptr<Shape> polygon = std::make_unique<Polygon>(sides, color);
+            {                
+                //std::lock_guard<std::mutex>lock(mutex);
+                std::shared_lock<std::shared_mutex> lock(mutex);
+                shapes.push_back(std::move(polygon));
+            }
+            std::cout << "Polygon이 추가되었습니다." << std::endl;
+            break;
+        }
+
+        default:
+            std::cout << "잘못된 입력입니다. 다시 시도하세요." << std::endl;
+            break;
+        }
+    }
+}
+
+
+void ShapeManager::printShape() const
+{
+    if (shapes.empty()) {
+        std::cout << "추가된 도형이 없습니다." << std::endl;
+        return;
+    }
+
+    std::cout << "추가된 도형 정보:" << std::endl;
+
+    {
+        //std::lock_guard<std::mutex>lock(mutex);
+        std::shared_lock<std::shared_mutex> lock(mutex);
+
+        for (const auto& shape : shapes) {
+            std::cout << shape->name() << "의 색상: " << shape->getColor() << std::endl;
+            std::cout << shape->name() << "의 면적: " << std::fixed << std::setprecision(2) << shape->area() << std::endl;
+            std::cout << shape->name() << "의 둘레: " << std::fixed << std::setprecision(2) << shape->perimeter() << std::endl;
+        }
+    }
+}
+
+void ShapeManager::removeShape()
+{
+    int index;
+    std::cout << "삭제할 도형의 인덱스 입력: ";
+    std::cin >> index;
+
+    {
+        //std::lock_guard<std::mutex>lock(mutex);
+        std::shared_lock<std::shared_mutex> lock(mutex);
+
+        if (index >= 0 && index < shapes.size()) {
+            shapes.erase(shapes.begin() + index);
+            std::cout << "도형이 삭제되었습니다." << std::endl;
+        }
+        else {
+            std::cout << "잘못된 인덱스입니다." << std::endl;
+        }
+    }
+}
+
