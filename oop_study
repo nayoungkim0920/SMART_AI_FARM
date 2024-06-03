@@ -1002,3 +1002,206 @@ int main() {
 
 	return 0;
 }
+
+
+//다각형 추가
+//1. Polygon 클래스 추가
+//Polygon.h
+#ifndef POLYGON_H
+#define POLYGON_H
+
+#include "Shape.h"
+#include <vector>
+
+class Polygon : public Shape {
+public:
+	Polygon(const std::vector<double>& sides, const std::string& color);
+	~Polygon() override = default; //기본동작을함을알수있다.
+
+	double area() const override;
+	double perimeter() const override;
+	std::string name() const override;
+	std::string getColor() const override;
+	void setColor(const std::string& color) override;
+
+private:
+	std::vector<double> sides_;
+	std::string color_;
+};
+
+#endif //POLYGON_H
+
+//Polygon.cpp
+#include "Polygon.h"
+
+// Polygon 클래스의 생성자
+Polygon::Polygon(const std::vector<double>& sides, const std::string& color)
+    : sides_(sides), color_(color) {}
+
+// 면적을 계산하는 함수 (단순한 경우로, 예를 들어 모든 변이 같은 정다각형일 때)
+double Polygon::area() const {
+    // 일반적인 다각형의 면적을 계산하기 위한 방법이 복잡하므로 여기서는 정다각형의 면적을 예로 들겠습니다.
+    int n = sides_.size();
+    if (n < 3) return 0; // 삼각형 이하일 경우 면적은 0
+    double side_length = sides_[0]; // 모든 변이 같다고 가정
+    double apothem = side_length / (2 * tan(M_PI / n));
+    return (n * side_length * apothem) / 2;
+}
+
+// 둘레를 계산하는 함수
+double Polygon::perimeter() const {
+    double perimeter = 0;
+    for (double side : sides_) {
+        perimeter += side;
+    }
+    return perimeter;
+}
+
+// 도형의 이름을 반환하는 함수
+std::string Polygon::name() const {
+    return "Polygon";
+}
+
+// 색상을 반환하는 함수
+std::string Polygon::getColor() const {
+    return color_;
+}
+
+// 색상을 설정하는 함수
+void Polygon::setColor(const std::string& color) {
+    color_ = color;
+}
+
+//ShapeManager.h
+#ifndef SHAPESMANAGER_H
+#define SHAPESMANAGER_H
+
+#include <vector>
+#include <memory>
+#include "Shape.h"
+
+class ShapeManager {
+public:
+	void addShape(); //도형추가
+	void printShape() const; //해당 함수가 객체의 상태를 변경하지 않음을 보장
+	void removeShape(); //도형삭제
+private:
+	std::vector<std::unique_ptr<Shape>> shapes;
+};
+
+#endif //SHAPESMANAGER_H
+
+//ShapeManager.cpp
+#include "ShapesManager.h"
+#include "Rectangle.h"
+#include "Circle.h"
+#include "Triangle.h"
+#include "Polygon.h"
+#include <iostream>
+#include <iomanip> //소수점 출력
+
+void ShapeManager::addShape()
+{
+    int choice;
+    while (true) {
+        std::cout << "도형을 추가하세요 (1: Rectangle, 2: Circle, 3: Triangle, 4:Polygon 0: 종료): ";
+        std::cin >> choice;
+        if (choice == 0) break;
+
+        switch (choice) {
+        case 1: {
+            double width, height;
+            std::string color;
+            std::cout << "Rectangle의 너비, 높이, 색상 입력: ";
+            std::cin >> width >> height >> color;
+            auto rect = std::make_unique<Rectangle>(width, height, color);
+            shapes.push_back(std::move(rect));
+            std::cout << "Rectangle이 추가되었습니다." << std::endl;
+            break;
+        }
+        case 2: {
+            double radius;
+            std::string color;
+            std::cout << "Circle의 반지름, 색상 입력: ";
+            std::cin >> radius >> color;
+            auto circle = std::make_unique<Circle>(radius, color);
+            shapes.push_back(std::move(circle));
+            std::cout << "Circle이 추가되었습니다." << std::endl;
+            break;
+        }
+        case 3: {
+            double base, height, side1, side2, side3;
+            std::string color;
+            std::cout << "Triangle의 밑변, 높이, 세 변의 길이, 색상 입력: ";
+            std::cin >> base >> height >> side1 >> side2 >> side3 >> std::ws; // std::ws를 사용하여 입력 버퍼를 비웁니다.
+            std::getline(std::cin, color); // 개행 문자를 무시하고 나머지 입력을 받습니다.
+            auto triangle = std::make_unique<Triangle>(base, height, side1, side2, side3, color);
+            shapes.push_back(std::move(triangle));
+            std::cout << "Triangle이 추가되었습니다." << std::endl;
+            break;
+        }
+        case 4: {
+            int n;
+            std::cout << "Polygon의 변의 개수 입력: ";
+            while (!(std::cin >> n) || n < 3) { // n이 유효한 값인지 확인
+                std::cout << "유효한 변의 개수를 입력하십시오 (3 이상의 정수): ";
+                std::cin.clear(); // 입력 스트림의 오류 상태를 지움
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 버퍼를 비움
+            }
+
+            std::vector<double> sides(n);
+            std::string color;
+            std::cout << "Polygon의 각 변의 길이와 색상 입력: ";
+            for (int i = 0; i < n; ++i) {
+                while (!(std::cin >> sides[i])) { // 각 변의 길이가 유효한 값인지 확인
+                    std::cout << "유효한 변의 길이를 입력하십시오: ";
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+            }
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 남아있는 '\n'를 무시
+            std::getline(std::cin, color); // 색상을 입력받음
+
+            auto polygon = std::make_unique<Polygon>(sides, color);
+            shapes.push_back(std::move(polygon));
+            std::cout << "Polygon이 추가되었습니다." << std::endl;
+            break;
+        }
+
+        default:
+            std::cout << "잘못된 입력입니다. 다시 시도하세요." << std::endl;
+            break;
+        }
+    }
+}
+
+
+void ShapeManager::printShape() const
+{
+    if (shapes.empty()) {
+        std::cout << "추가된 도형이 없습니다." << std::endl;
+        return;
+    }
+
+    std::cout << "추가된 도형 정보:" << std::endl;
+
+	for (const auto& shape : shapes) {
+		std::cout << shape->name() << "의 색상: " << shape->getColor() << std::endl;
+		std::cout << shape->name() << "의 면적: " << std::fixed << std::setprecision(2) << shape->area() << std::endl;
+		std::cout << shape->name() << "의 둘레: " << std::fixed << std::setprecision(2) << shape->perimeter() << std::endl;
+	}
+}
+
+void ShapeManager::removeShape()
+{
+    int index;
+    std::cout << "삭제할 도형의 인덱스 입력: ";
+    std::cin >> index;
+    if (index >= 0 && index < shapes.size()) {
+        shapes.erase(shapes.begin() + index);
+        std::cout << "도형이 삭제되었습니다." << std::endl;
+    }
+    else {
+        std::cout << "잘못된 인덱스입니다." << std::endl;
+    }
+}
