@@ -1689,3 +1689,14 @@ void ShapeManager::removeShape()
     }
 }
 
+//설명
+1. ShapeManager.h
+#inclde <shared_mutex>
+//mutable std::mutex mutex;
+mutable std::shared_mutex mutex;
+
+2. ShapeManager.cpp
+void ShapeManager::addShape(),
+void ShapeManager::printShape() const,
+void ShapeManager::removeShape()
+std::shared_lock<std::shared_mutex> lock(mutex);
